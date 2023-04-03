@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "trino_client",
     srcs = ["trino_client.go"],
-    importpath = "cs.nyu.edu/crimemap/analytics/online/server/trino_client",
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/server/trino_client",
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/server/enviroment",

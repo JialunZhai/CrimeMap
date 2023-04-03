@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 
-	cms "cs.nyu.edu/crimemap/analytics/online/server/crimemap_service"
-	"cs.nyu.edu/crimemap/analytics/online/server/grpc_server"
-	"cs.nyu.edu/crimemap/analytics/online/server/http_server"
-	real_env "cs.nyu.edu/crimemap/analytics/online/server/real_enviroment"
-	"cs.nyu.edu/crimemap/analytics/online/server/trino_client"
+	cms "github.com/jialunzhai/crimemap/analytics/online/server/crimemap_service"
+	"github.com/jialunzhai/crimemap/analytics/online/server/grpc_server"
+	"github.com/jialunzhai/crimemap/analytics/online/server/http_server"
+	real_env "github.com/jialunzhai/crimemap/analytics/online/server/real_enviroment"
+	"github.com/jialunzhai/crimemap/analytics/online/server/trino_client"
 	"golang.org/x/sync/errgroup"
 )
 

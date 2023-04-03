@@ -2,5 +2,5 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 
 package(default_visibility = ["//visibility:public"])
 
-# gazelle:prefix cs.nyu.edu/crimemap/
+# gazelle:prefix github.com/jialunzhai/crimemap/
 gazelle(name = "gazelle")

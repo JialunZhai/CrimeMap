@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	pb "cs.nyu.edu/crimemap/analytics/online/proto"
+	pb "github.com/jialunzhai/crimemap/analytics/online/proto"
 	"google.golang.org/grpc"
 )
 

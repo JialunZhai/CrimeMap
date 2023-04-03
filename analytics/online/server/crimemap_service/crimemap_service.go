@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	pb "cs.nyu.edu/crimemap/analytics/online/proto"
-	env_interface "cs.nyu.edu/crimemap/analytics/online/server/enviroment"
+	pb "github.com/jialunzhai/crimemap/analytics/online/proto"
+	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 )
 
 type CrimeMapService struct {

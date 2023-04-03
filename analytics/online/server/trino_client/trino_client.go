@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	env_interface "cs.nyu.edu/crimemap/analytics/online/server/enviroment"
-	"cs.nyu.edu/crimemap/analytics/online/server/interfaces"
+	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
+	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
 	_ "github.com/trinodb/trino-go-client/trino"
 )
 

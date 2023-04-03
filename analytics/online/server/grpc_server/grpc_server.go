@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	env_interface "cs.nyu.edu/crimemap/analytics/online/server/enviroment"
+	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 	"google.golang.org/grpc"
 )
 

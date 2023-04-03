@@ -31,4 +31,4 @@ gopkg.in/jcmturner/rpc.v1/mstypes
 gopkg.in/jcmturner/rpc.v1/ndr
 gopkg.in/jcmturner/gokrb5.v6
 
-replace "cs.nyu.edu/crimemap/vendor/" with ""
+replace "github.com/jialunzhai/crimemap/vendor/" with ""

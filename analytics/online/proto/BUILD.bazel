@@ -14,7 +14,7 @@ proto_library(
 go_proto_library(
     name = "proto_go_proto",
     compilers = ["@io_bazel_rules_go//proto:go_grpc"],
-    importpath = "cs.nyu.edu/crimemap/analytics/online/proto",
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/proto",
     proto = ":proto_proto",
     visibility = ["//visibility:public"],
 )
@@ -22,6 +22,6 @@ go_proto_library(
 go_library(
     name = "proto",
     embed = [":proto_go_proto"],
-    importpath = "cs.nyu.edu/crimemap/analytics/online/proto",
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/proto",
     visibility = ["//visibility:public"],
 )

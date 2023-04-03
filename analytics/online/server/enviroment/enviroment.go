@@ -1,7 +1,7 @@
 package environment
 
 import (
-	"cs.nyu.edu/crimemap/analytics/online/server/interfaces"
+	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
 )
 
 type Env interface {

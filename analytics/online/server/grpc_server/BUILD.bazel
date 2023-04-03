@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "grpc",
     srcs = ["grpc.go"],
-    importpath = "cs.nyu.edu/crimemap/analytics/online/server/grpc",
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/server/grpc",
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/server/enviroment",
@@ -14,7 +14,7 @@ go_library(
 go_library(
     name = "grpc_service",
     srcs = ["grpc_service.go"],
-    importpath = "cs.nyu.edu/crimemap/analytics/online/server/grpc_service",
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/server/grpc_service",
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/server/enviroment",
@@ -25,7 +25,7 @@ go_library(
 go_library(
     name = "grpc_server",
     srcs = ["grpc_server.go"],
-    importpath = "cs.nyu.edu/crimemap/analytics/online/server/grpc_server",
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/server/grpc_server",
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/server/enviroment",

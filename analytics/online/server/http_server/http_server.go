@@ -3,7 +3,7 @@ package http_server
 import (
 	"net/http"
 
-	env_interface "cs.nyu.edu/crimemap/analytics/online/server/enviroment"
+	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 )
 
 type HTTPServer struct {

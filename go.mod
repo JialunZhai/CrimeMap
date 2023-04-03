@@ -1,9 +1,8 @@
-module crimemap
+module github.com/jialunzhai/crimemap
 
 go 1.20
 
 replace (
-	cs.nyu.edu/crimemap => ./
 	gopkg.in/jcmturner/rpc.v1 => ./vendor/gopkg.in/jcmturner/rpc.v1
 	gopkg.in/jcmturner/gokrb5.v6 => ./vendor/gopkg.in/jcmturner/gokrb5.v6
 )

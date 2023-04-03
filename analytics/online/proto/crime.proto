@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package crimemap.service;
 
-option go_package = "cs.nyu.edu/crimemap/analytics/online/proto";
+option go_package = "github.com/jialunzhai/crimemap/analytics/online/proto";
 
 message GetCrimesRequest {
   int64 time = 1;
