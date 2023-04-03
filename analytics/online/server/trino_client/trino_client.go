@@ -6,7 +6,7 @@ import (
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
-	_ "github.com/trinodb/trino-go-client/trino"
+	//_ "github.com/trinodb/trino-go-client/trino"
 )
 
 type TrinoClient struct {

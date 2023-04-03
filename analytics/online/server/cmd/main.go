@@ -40,8 +40,7 @@ func main() {
 		log.Fatalf("HTTPServer.Register failed: %v\n", err)
 	}
 
-	g, ctx := errgroup.WithContext(context.Background())
-
+	g, _ := errgroup.WithContext(context.Background())
 	g.Go(func() error {
 		err := env.GetGRPCServer().Run()
 		log.Fatalf("GRPCServer exited because %v\n", err)
@@ -52,4 +51,7 @@ func main() {
 		log.Fatalf("HTTPServer exited because %v\n", err)
 		return err
 	})
+	if err := g.Wait(); err != nil {
+		log.Fatalf("main exited because %v\n", err)
+	}
 }
