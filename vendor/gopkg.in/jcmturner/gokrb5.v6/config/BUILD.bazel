@@ -11,8 +11,8 @@ go_library(
     importpath = "gopkg.in/jcmturner/gokrb5.v6/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/encoding/asn1",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/etypeID",
-        "@com_github_jcmturner_gofork//encoding/asn1",
         "@in_gopkg_jcmturner_dnsutils_v1//:dnsutils_v1",
     ],
 )

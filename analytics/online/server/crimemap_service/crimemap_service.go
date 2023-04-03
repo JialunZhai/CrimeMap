@@ -21,7 +21,7 @@ func Register(env env_interface.Env) error {
 	if err != nil {
 		return err
 	}
-	cmspb.RegisterCrimeMapServer(grpcServer.GetServer(), s)
+	//cmspb.RegisterCrimeMapServer(grpcServer.GetServer(), s)
 	env.SetCrimeMapService(s)
 	return nil
 }

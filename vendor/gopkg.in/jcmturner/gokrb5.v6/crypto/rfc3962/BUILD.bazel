@@ -10,9 +10,9 @@ go_library(
     importpath = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc3962",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/x/crypto/pbkdf2",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/common",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/etype",
-        "@com_github_jcmturner_gofork//x/crypto/pbkdf2",
         "@in_gopkg_jcmturner_aescts_v1//:aescts_v1",
     ],
 )

@@ -6,5 +6,5 @@ go_library(
     importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/asn1tools",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/asn1tools",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_jcmturner_gofork//encoding/asn1"],
+    deps = ["//vendor/github.com/jcmturner/gofork/encoding/asn1"],
 )

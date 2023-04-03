@@ -14,6 +14,7 @@ go_library(
     importpath = "gopkg.in/jcmturner/gokrb5.v6/gssapi",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/encoding/asn1",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/asn1tools",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/credentials",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto",
@@ -22,7 +23,6 @@ go_library(
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/krberror",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/messages",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/types",
-        "@com_github_jcmturner_gofork//encoding/asn1",
     ],
 )
 
@@ -36,13 +36,13 @@ go_test(
     ],
     embed = [":gssapi"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/encoding/asn1",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/credentials",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/keyusage",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/msgtype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/messages",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/testdata",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/types",
-        "@com_github_jcmturner_gofork//encoding/asn1",
         "@com_github_stretchr_testify//assert:go_default_library",
     ],
 )

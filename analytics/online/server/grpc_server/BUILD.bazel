@@ -29,6 +29,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/server/enviroment",
-        "@org_golang_google_grpc//:go_default_library",
+        "//vendor/google.golang.org/grpc",
     ],
 )

@@ -17,6 +17,7 @@ go_library(
     importpath = "gopkg.in/jcmturner/gokrb5.v6/messages",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/encoding/asn1",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/asn1tools",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/config",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/credentials",
@@ -34,7 +35,6 @@ go_library(
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/krberror",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/pac",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/types",
-        "@com_github_jcmturner_gofork//encoding/asn1",
     ],
 )
 

@@ -16,13 +16,13 @@ go_library(
     importpath = "gopkg.in/jcmturner/gokrb5.v6/types",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/encoding/asn1",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/asn1tools",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/addrtype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/asnAppTag",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/nametype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/patype",
-        "@com_github_jcmturner_gofork//encoding/asn1",
     ],
 )
 
@@ -40,6 +40,7 @@ go_test(
     ],
     embed = [":types"],
     deps = [
+        "//vendor/github.com/jcmturner/gofork/encoding/asn1",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/addrtype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/adtype",
@@ -47,7 +48,6 @@ go_test(
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/nametype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/patype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/testdata",
-        "@com_github_jcmturner_gofork//encoding/asn1",
         "@com_github_stretchr_testify//assert:go_default_library",
     ],
 )
