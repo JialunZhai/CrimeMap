@@ -1,0 +1,49 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pac",
+    srcs = [
+        "client_claims.go",
+        "client_info.go",
+        "credentials_info.go",
+        "device_claims.go",
+        "device_info.go",
+        "kerb_validation_info.go",
+        "pac_type.go",
+        "s4u_delegation_info.go",
+        "signature_data.go",
+        "supplemental_cred.go",
+        "upn_dns_info.go",
+    ],
+    importmap = "gopkg.in/jcmturner/gokrb5.v6/pac",
+    importpath = "gopkg.in/jcmturner/gokrb5.v6/pac",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/chksumtype",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/keyusage",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/types",
+        "//vendor/gopkg.in/jcmturner/rpc.v1/mstypes",
+        "//vendor/gopkg.in/jcmturner/rpc.v1/ndr",
+    ],
+)
+
+go_test(
+    name = "pac_test",
+    srcs = [
+        "client_claims_test.go",
+        "client_info_test.go",
+        "kerb_validation_info_test.go",
+        "pac_type_test.go",
+        "signature_data_test.go",
+        "upn_dns_info_test.go",
+    ],
+    embed = [":pac"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/chksumtype",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/keytab",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/testdata",
+        "//vendor/gopkg.in/jcmturner/rpc.v1/mstypes",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

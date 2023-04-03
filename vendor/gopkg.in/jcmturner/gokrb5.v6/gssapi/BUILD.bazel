@@ -1,0 +1,48 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "gssapi",
+    srcs = [
+        "ContextFlags.go",
+        "MechType.go",
+        "NegotiationToken.go",
+        "WrapToken.go",
+        "gssapi.go",
+        "krb5Token.go",
+    ],
+    importmap = "gopkg.in/jcmturner/gokrb5.v6/gssapi",
+    importpath = "gopkg.in/jcmturner/gokrb5.v6/gssapi",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/asn1tools",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/credentials",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/chksumtype",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/keyusage",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/krberror",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/messages",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/types",
+        "@com_github_jcmturner_gofork//encoding/asn1",
+    ],
+)
+
+go_test(
+    name = "gssapi_test",
+    srcs = [
+        "NegotiationToken_test.go",
+        "WrapToken_test.go",
+        "gssapi_test.go",
+        "krb5Token_test.go",
+    ],
+    embed = [":gssapi"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/credentials",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/keyusage",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/msgtype",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/messages",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/testdata",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/types",
+        "@com_github_jcmturner_gofork//encoding/asn1",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "rfc3961",
+    srcs = [
+        "encryption.go",
+        "keyDerivation.go",
+        "nfold.go",
+    ],
+    importmap = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc3961",
+    importpath = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc3961",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/common",
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/etype",
+    ],
+)
+
+go_test(
+    name = "rfc3961_test",
+    srcs = [
+        "keyDerivation_test.go",
+        "nfold_test.go",
+    ],
+    embed = [":rfc3961"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)

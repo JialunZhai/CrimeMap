@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "keyusage",
+    srcs = ["constants.go"],
+    importmap = "gopkg.in/jcmturner/gokrb5.v6/iana/keyusage",
+    importpath = "gopkg.in/jcmturner/gokrb5.v6/iana/keyusage",
+    visibility = ["//visibility:public"],
+)

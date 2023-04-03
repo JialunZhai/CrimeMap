@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "keytab",
+    srcs = ["keytab.go"],
+    importmap = "gopkg.in/jcmturner/gokrb5.v6/keytab",
+    importpath = "gopkg.in/jcmturner/gokrb5.v6/keytab",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/gopkg.in/jcmturner/gokrb5.v6/types"],
+)
+
+go_test(
+    name = "keytab_test",
+    srcs = ["keytab_test.go"],
+    embed = [":keytab"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/testdata",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

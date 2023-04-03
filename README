@@ -1,0 +1,34 @@
+# install golang
+  https://go.dev/doc/install
+
+# install bazel
+  https://bazel.build/install
+
+# generate BUILD files
+  bazel run //:gazelle
+
+# build server
+  bazel build //analytics/online/server/cmd
+
+# add new js lib
+  bazel run @nodejs//:yarn -- add libname.js
+
+# go
+go mod init $"project_name"
+go tidy
+go get github.com/trinodb/trino-go-client
+bazel run //:gazelle update-repos github.com/trinodb/trino-go-client
+bazel run //:gazelle
+bazel run //analytics/online/server/cmd
+
+github.com/jcmturner/gofork
+golang.org/x/crypto
+gopkg.in/jcmturner/dnsutils.v1
+gopkg.in/jcmturner/aescts.v1
+github.com/hashicorp/go-uuid
+
+gopkg.in/jcmturner/rpc.v1/mstypes
+gopkg.in/jcmturner/rpc.v1/ndr
+gopkg.in/jcmturner/gokrb5.v6
+
+replace "cs.nyu.edu/crimemap/vendor/" with ""

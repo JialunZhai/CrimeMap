@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "analytics/online/proto/crime.proto";
+
+package crimemap.service;
+
+option go_package = "cs.nyu.edu/crimemap/analytics/online/proto";
+
+service CrimeMap {
+  rpc GetCrimes(GetCrimesRequest) returns (GetCrimesResponse) {}
+}

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "config",
+    srcs = [
+        "error.go",
+        "hosts.go",
+        "krb5conf.go",
+    ],
+    importmap = "gopkg.in/jcmturner/gokrb5.v6/config",
+    importpath = "gopkg.in/jcmturner/gokrb5.v6/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/etypeID",
+        "@com_github_jcmturner_gofork//encoding/asn1",
+        "@in_gopkg_jcmturner_dnsutils_v1//:dnsutils_v1",
+    ],
+)
+
+go_test(
+    name = "config_test",
+    srcs = ["krb5conf_test.go"],
+    embed = [":config"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)
