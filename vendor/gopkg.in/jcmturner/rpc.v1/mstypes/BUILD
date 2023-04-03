@@ -13,7 +13,7 @@ go_library(
         "sid.go",
         "user_session_key.go",
     ],
-    importmap = "gopkg.in/jcmturner/rpc.v1/mstypes",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/rpc.v1/mstypes",
     importpath = "gopkg.in/jcmturner/rpc.v1/mstypes",
     visibility = ["//visibility:public"],
     deps = ["//vendor/gopkg.in/jcmturner/rpc.v1/ndr"],

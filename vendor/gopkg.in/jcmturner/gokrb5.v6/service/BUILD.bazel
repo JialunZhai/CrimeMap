@@ -8,7 +8,7 @@ go_library(
         "cache.go",
         "http.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/service",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/service",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/service",
     visibility = ["//visibility:public"],
     deps = [

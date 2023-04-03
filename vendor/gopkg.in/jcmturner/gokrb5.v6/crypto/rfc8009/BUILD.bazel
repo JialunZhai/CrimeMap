@@ -6,7 +6,7 @@ go_library(
         "encryption.go",
         "keyDerivation.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc8009",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/rfc8009",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc8009",
     visibility = ["//visibility:public"],
     deps = [

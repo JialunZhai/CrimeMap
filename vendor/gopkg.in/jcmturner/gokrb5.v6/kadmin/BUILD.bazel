@@ -7,7 +7,7 @@ go_library(
         "message.go",
         "passwd.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/kadmin",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/kadmin",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/kadmin",
     visibility = ["//visibility:public"],
     deps = [

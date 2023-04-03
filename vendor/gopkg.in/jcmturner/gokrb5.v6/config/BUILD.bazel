@@ -7,7 +7,7 @@ go_library(
         "hosts.go",
         "krb5conf.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/config",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/config",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/config",
     visibility = ["//visibility:public"],
     deps = [

@@ -12,7 +12,7 @@ go_library(
         "passwd.go",
         "session.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/client",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/client",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/client",
     visibility = ["//visibility:public"],
     deps = [

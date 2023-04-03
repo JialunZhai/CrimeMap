@@ -8,7 +8,7 @@ go_library(
         "keyDerivation.go",
         "msgtype.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc4757",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/rfc4757",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc4757",
     visibility = ["//visibility:public"],
     deps = [

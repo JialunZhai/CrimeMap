@@ -1,10 +1,21 @@
 syntax = "proto3";
 
-import "analytics/online/proto/crime.proto";
-
 package crimemap.service;
 
-option go_package = "github.com/jialunzhai/crimemap/analytics/online/proto";
+option go_package = "crimemap_service";
+
+message GetCrimesRequest {
+  int64 time = 1;
+}
+
+message Crime {
+  double longitude = 1;
+  double latitude = 2;
+}
+
+message GetCrimesResponse { 
+  repeated Crime crimes = 2; 
+}
 
 service CrimeMap {
   rpc GetCrimes(GetCrimesRequest) returns (GetCrimesResponse) {}

@@ -15,7 +15,7 @@ go_library(
         "supplemental_cred.go",
         "upn_dns_info.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/pac",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/pac",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/pac",
     visibility = ["//visibility:public"],
     deps = [

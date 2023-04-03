@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "errorcode",
     srcs = ["constants.go"],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/iana/errorcode",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/iana/errorcode",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/iana/errorcode",
     visibility = ["//visibility:public"],
 )

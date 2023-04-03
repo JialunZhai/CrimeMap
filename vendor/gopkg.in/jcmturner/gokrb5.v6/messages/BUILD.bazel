@@ -13,7 +13,7 @@ go_library(
         "KRBSafe.go",
         "Ticket.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/messages",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/messages",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/messages",
     visibility = ["//visibility:public"],
     deps = [

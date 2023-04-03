@@ -10,7 +10,7 @@ go_library(
         "gssapi.go",
         "krb5Token.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/gssapi",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/gssapi",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/gssapi",
     visibility = ["//visibility:public"],
     deps = [

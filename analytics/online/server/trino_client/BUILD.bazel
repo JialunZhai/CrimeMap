@@ -8,6 +8,5 @@ go_library(
     deps = [
         "//analytics/online/server/enviroment",
         "//analytics/online/server/interfaces",
-        #"@com_github_trinodb_trino_go_client//trino",
     ],
 )

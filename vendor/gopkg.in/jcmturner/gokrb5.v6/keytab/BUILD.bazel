@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "keytab",
     srcs = ["keytab.go"],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/keytab",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/keytab",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/keytab",
     visibility = ["//visibility:public"],
     deps = ["//vendor/gopkg.in/jcmturner/gokrb5.v6/types"],

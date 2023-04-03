@@ -11,7 +11,7 @@ go_library(
         "des3-cbc-sha1-kd.go",
         "rc4-hmac.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/crypto",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/crypto",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/crypto",
     visibility = ["//visibility:public"],
     deps = [

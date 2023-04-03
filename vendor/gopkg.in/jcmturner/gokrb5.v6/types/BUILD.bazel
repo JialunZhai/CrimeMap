@@ -12,7 +12,7 @@ go_library(
         "PrincipalName.go",
         "TypedData.go",
     ],
-    importmap = "gopkg.in/jcmturner/gokrb5.v6/types",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/types",
     importpath = "gopkg.in/jcmturner/gokrb5.v6/types",
     visibility = ["//visibility:public"],
     deps = [

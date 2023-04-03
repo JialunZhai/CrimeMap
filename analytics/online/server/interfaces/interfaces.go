@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	pb "github.com/jialunzhai/crimemap/analytics/online/proto"
+	cmspb "github.com/jialunzhai/crimemap/analytics/online/crimemap_service"
 	"google.golang.org/grpc"
 )
 
@@ -23,7 +23,7 @@ type GRPCServer interface {
 }
 
 type CrimeMapService interface {
-	GetCrimes(ctx context.Context, req *pb.GetCrimesRequest) (*pb.GetCrimesResponse, error)
+	GetCrimes(ctx context.Context, req *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error)
 }
 
 type TrinoClient interface {

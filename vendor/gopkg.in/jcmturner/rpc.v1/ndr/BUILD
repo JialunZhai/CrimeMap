@@ -14,7 +14,7 @@ go_library(
         "tags.go",
         "union.go",
     ],
-    importmap = "gopkg.in/jcmturner/rpc.v1/ndr",
+    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/rpc.v1/ndr",
     importpath = "gopkg.in/jcmturner/rpc.v1/ndr",
     visibility = ["//visibility:public"],
 )

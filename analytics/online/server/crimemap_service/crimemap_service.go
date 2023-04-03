@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/jialunzhai/crimemap/analytics/online/proto"
+	cmspb "github.com/jialunzhai/crimemap/analytics/online/crimemap_service"
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 )
 
@@ -21,7 +21,7 @@ func Register(env env_interface.Env) error {
 	if err != nil {
 		return err
 	}
-	pb.RegisterCrimeMapServer(grpcServer.GetServer(), s)
+	cmspb.RegisterCrimeMapServer(grpcServer.GetServer(), s)
 	env.SetCrimeMapService(s)
 	return nil
 }
@@ -32,7 +32,7 @@ func NewCrimeMapService(env env_interface.Env) (*CrimeMapService, error) {
 	}, nil
 }
 
-func (s *CrimeMapService) GetCrimes(ctx context.Context, _ *pb.GetCrimesRequest) (*pb.GetCrimesResponse, error) {
+func (s *CrimeMapService) GetCrimes(ctx context.Context, _ *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error) {
 	// TODO: implement this with trino_client.GetCrimes
 	return &pb.GetCrimesResponse{}, nil
 }
