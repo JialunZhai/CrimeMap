@@ -10,10 +10,10 @@ go_library(
     importpath = "gopkg.in/jcmturner/gokrb5.v6/crypto/rfc8009",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/golang.org/x/crypto/pbkdf2",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/common",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/crypto/etype",
         "//vendor/gopkg.in/jcmturner/gokrb5.v6/iana/etypeID",
         "@in_gopkg_jcmturner_aescts_v1//:aescts_v1",
+        "@org_golang_x_crypto//pbkdf2",
     ],
 )
