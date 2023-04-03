@@ -1,4 +1,4 @@
-module github.com/jialunzhai/crimemap
+module crimemap
 
 go 1.20
 
