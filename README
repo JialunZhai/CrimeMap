@@ -1,43 +1,57 @@
-# install golang
+# Install golang
   https://go.dev/doc/install
 
-# install protobuf compiler on linux
+# Install protobuf compiler on linux
   sudo apt install protobuf-compiler
   sudo apt install golang-goprotobuf-dev
 
-# install go-protobuf plugin
+# Install go-protobuf plugin
   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
-# install bazel
+# Install bazel
   https://bazel.build/install
 
-# generate BUILD files
+# Generate BUILD files
   bazel run //:gazelle
 
-# compile protobuf
+# Compile protobuf
+## take crimemap_service.proto for example
   protoc analytics/online/proto/crimemap_service/crimemap_service.proto -I. --go_out=:.
-# build server
+
+# Build the whole project
   bazel build //analytics/online/server/cmd
 
-# add new js lib
+# Add new js lib
   bazel run @nodejs//:yarn -- add libname.js
 
-# go
-go mod init $"project_name"
-go tidy
-go get github.com/trinodb/trino-go-client
-bazel run //:gazelle update-repos github.com/trinodb/trino-go-client
-bazel run //:gazelle
-bazel run //analytics/online/server/cmd
+# Clear useless modules from dependencies
+  go tidy
 
-github.com/jcmturner/gofork
-golang.org/x/crypto
-gopkg.in/jcmturner/dnsutils.v1
-gopkg.in/jcmturner/aescts.v1
-github.com/hashicorp/go-uuid
+# Add an external go-dependency
+## If the source code of $MODULE_NAME has go.mod then
+### 1. add $MODULE_NAME to go.mod
+  go get $MODULE_NAME
+### 2. add $MODULE_NAME an external bazel-repository
+  bazel run //:gazelle update-repos $MODULE_NAME
+### 3. update BUILD.bazel for those who depend on $MODULE_NAME
+  bazel run //:gazelle
+## else
+### 1. add $MODULE_NAME to go.mod
+  go get $MODULE_NAME
+### 2. download the source code to vendor dir, the relative path of the go-module to vendor dir should match the module name
+### 3. add the following line to repalce in go.mod,
+###    then golang will import this module from local dir
+  $MODULE_NAME => ./vendor/$MODULE_NAME
+### 4. update BUILD.bazel for those who depend on $MODULE_NAME
+  bazel run //:gazelle
+### 5. you can compile the project now, but some errors will occur which can be solved by troubleshooting section in this README
 
-gopkg.in/jcmturner/rpc.v1/mstypes
-gopkg.in/jcmturner/rpc.v1/ndr
-gopkg.in/jcmturner/gokrb5.v6
+# WARNNING
+- DONOT RUN `go mod vendor`: YOU CAN RUN IT ONLY IF YOU ARE ADDING AN EXTERNAL MODULE WHICH DOES NOT HAVE go.mod
 
-replace "github.com/jialunzhai/crimemap/vendor/" with ""
+# Troubleshooting
+## After run go vendor, it will add all dependencies into vendor, leading gazelle works incorrectly.
+## Those modules are typically direct dependencies. 
+## You can delect those modules in vendor if gazelle generates a BUILD.bazel refer to them in vendor dir.
+## For example, a known module has this behavior is google.golang.org/grpc, 
+## you shoud remove vendor/google.golang.org/grpc everytime after you run go vendor
