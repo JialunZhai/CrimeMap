@@ -5,5 +5,8 @@ go_library(
     srcs = ["crimemap_service.go"],
     importpath = "github.com/jialunzhai/crimemap/analytics/online/server/crimemap_service",
     visibility = ["//visibility:public"],
-    deps = ["//analytics/online/server/enviroment"],
+    deps = [
+        "//analytics/online/proto/crimemap_service",
+        "//analytics/online/server/enviroment",
+    ],
 )

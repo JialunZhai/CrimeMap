@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	cmspb "github.com/jialunzhai/crimemap/analytics/online/crimemap_service"
+	cmspb "github.com/jialunzhai/crimemap/analytics/online/proto/crimemap_service"
 	"google.golang.org/grpc"
 )
 
