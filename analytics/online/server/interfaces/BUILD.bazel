@@ -7,6 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/proto/crimemap_service",
-        "//vendor/google.golang.org/grpc",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
