@@ -3,6 +3,7 @@ package trino_client
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
@@ -29,6 +30,7 @@ func NewTrinoClient(env env_interface.Env) (*TrinoClient, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Connected to Trino server.")
 	return &TrinoClient{
 		env: env,
 		db:  db,

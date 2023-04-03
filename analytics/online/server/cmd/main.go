@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	cms "github.com/jialunzhai/crimemap/analytics/online/server/crimemap_service"
 	"github.com/jialunzhai/crimemap/analytics/online/server/grpc_server"
@@ -12,46 +16,67 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const debug = true
-
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
 	env := real_env.NewRealEnv()
-
-	if debug {
-		if err := http_server.Register(env); err != nil {
-			log.Fatalf("HTTPServer.Register failed: %v\n", err)
-		}
-		if err := env.GetHTTPServer().Run(); err != nil {
-			log.Fatalf("HTTPServer exited because %v\n", err)
-		}
-		return
-	}
-
 	if err := trino_client.Register(env); err != nil {
-		log.Fatalf("TrinoClient.Register failed: %v\n", err)
+		log.Fatalf("TrinoClient.Register failed with error: `%v`\n", err)
 	}
 	if err := grpc_server.Register(env); err != nil {
-		log.Fatalf("GRPCServer.Register failed: %v\n", err)
+		log.Fatalf("GRPCServer.Register failed with error: `%v`\n", err)
 	}
 	if err := cms.Register(env); err != nil {
-		log.Fatalf("CrimeMapServer.Register failed: %v\n", err)
+		log.Fatalf("CrimeMapServer.Register failed with error: `%v`\n", err)
 	}
 	if err := http_server.Register(env); err != nil {
-		log.Fatalf("HTTPServer.Register failed: %v\n", err)
+		log.Fatalf("HTTPServer.Register failed with error: `%v`\n", err)
 	}
 
-	g, _ := errgroup.WithContext(context.Background())
+	g, ctx := errgroup.WithContext(ctx)
 	g.Go(func() error {
 		err := env.GetGRPCServer().Run()
-		log.Fatalf("GRPCServer exited because %v\n", err)
+		if err != nil {
+			log.Printf("GRPCServer shutdowned with error: `%v`\n", err)
+		}
+		log.Printf("GRPCServer gracefully shutdowned\n")
 		return err
 	})
 	g.Go(func() error {
 		err := env.GetHTTPServer().Run()
-		log.Fatalf("HTTPServer exited because %v\n", err)
+		if err != http.ErrServerClosed {
+			log.Printf("HTTPServer shutdowned with error: `%v`\n", err)
+			return err
+		}
+		log.Printf("HTTPServer gracefully shutdowned\n")
 		return err
 	})
+
+	// wait for signals
+	select {
+	case sig := <-sigs:
+		// received signal, cancel context
+		log.Printf("Received signal: `%v`\n", sig)
+		env.GetHTTPServer().Shutdown(ctx)
+		env.GetGRPCServer().Shutdown()
+		cancel()
+		break
+	case <-ctx.Done():
+		// context cancelled, all goroutines have returned
+		break
+	}
+
+	if err := env.GetTrinoClient().Close(); err != nil {
+		log.Fatalf("TrinoClient closed with error: `%v`\n", err)
+	}
+	log.Printf("TrinoClient gracefully closed\n")
+
+	// wait for all go-routines in errgroup to return
 	if err := g.Wait(); err != nil {
-		log.Fatalf("main exited because %v\n", err)
+		log.Printf("main exited with error: `%v`\n", err)
 	}
 }

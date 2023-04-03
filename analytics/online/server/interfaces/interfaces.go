@@ -15,11 +15,13 @@ type Crime struct {
 
 type HTTPServer interface {
 	Run() error
+	Shutdown(ctx context.Context) error
 }
 
 type GRPCServer interface {
 	GetServer() *grpc.Server
 	Run() error
+	Shutdown()
 }
 
 type CrimeMapService interface {

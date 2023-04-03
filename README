@@ -21,6 +21,9 @@
 # Build the whole project
   bazel build //analytics/online/server/cmd
 
+# Build and run the whole project
+  bazel run //analytics/online/server/cmd
+
 # Add new js lib
   bazel run @nodejs//:yarn -- add libname.js
 

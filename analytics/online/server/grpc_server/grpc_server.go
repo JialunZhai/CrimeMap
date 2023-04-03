@@ -2,6 +2,7 @@ package grpc_server
 
 import (
 	"fmt"
+	"log"
 	"net"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
@@ -44,5 +45,10 @@ func (s *GRPCServer) Run() error {
 	if s.env.GetCrimeMapService() == nil {
 		fmt.Errorf("CrimeMapServer.Register should be called before GRPCServer.Run")
 	}
+	log.Println("Start to serve gRPPC requests")
 	return s.server.Serve(s.listener)
+}
+
+func (s *GRPCServer) Shutdown() {
+	s.server.Stop()
 }

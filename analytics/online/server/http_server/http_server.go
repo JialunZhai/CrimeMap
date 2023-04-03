@@ -1,13 +1,16 @@
 package http_server
 
 import (
+	"context"
+	"log"
 	"net/http"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 )
 
 type HTTPServer struct {
-	env env_interface.Env
+	env    env_interface.Env
+	server *http.Server
 }
 
 func Register(env env_interface.Env) error {
@@ -20,12 +23,21 @@ func Register(env env_interface.Env) error {
 }
 
 func NewHTTPServer(env env_interface.Env) (*HTTPServer, error) {
+	server := &http.Server{
+		Addr:    ":8081",
+		Handler: http.FileServer(http.Dir("./analytics/online/webapp/app")),
+	}
 	return &HTTPServer{
-		env: env,
+		env:    env,
+		server: server,
 	}, nil
 }
 
 func (s *HTTPServer) Run() error {
-	http.Handle("/", http.FileServer(http.Dir("./analytics/online/webapp/app")))
-	return http.ListenAndServe(":8080", nil)
+	log.Println("Start to serve HTTP requests")
+	return s.server.ListenAndServe()
+}
+
+func (s *HTTPServer) Shutdown(ctx context.Context) error {
+	return s.server.Shutdown(ctx)
 }
