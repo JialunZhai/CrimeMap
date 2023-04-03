@@ -1,12 +1,21 @@
 # install golang
   https://go.dev/doc/install
 
+# install protobuf compiler on linux
+  sudo apt install protobuf-compiler
+  sudo apt install golang-goprotobuf-dev
+
+# install go-protobuf plugin
+  go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
 # install bazel
   https://bazel.build/install
 
 # generate BUILD files
   bazel run //:gazelle
 
+# compile protobuf
+  protoc analytics/online/proto/crimemap_service/crimemap_service.proto -I. --go_out=:.
 # build server
   bazel build //analytics/online/server/cmd
 
