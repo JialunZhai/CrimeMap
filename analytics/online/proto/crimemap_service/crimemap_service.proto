@@ -5,16 +5,22 @@ package crimemap.service;
 option go_package = "crimemap_service";
 
 message GetCrimesRequest {
-  int64 time = 1;
+  int64 time_min = 1;
+  int64 time_max = 2;
+  double longitude_min = 3;
+  double longitude_max = 4;
+  double latitude_min = 5;
+  double latitude_max = 6;
 }
 
 message Crime {
-  double longitude = 1;
-  double latitude = 2;
+  int64 time = 1;
+  double longitude = 2;
+  double latitude = 3;
 }
 
 message GetCrimesResponse { 
-  repeated Crime crimes = 2; 
+  repeated Crime crimes = 1; 
 }
 
 service CrimeMap {

@@ -1,20 +1,20 @@
 # Install golang
   https://go.dev/doc/install
 
-# Install protobuf compiler on linux
+# Install protobuf compiler on linux (no need to do this if you won't change crimemap_service.proto)
   sudo apt install protobuf-compiler
   sudo apt install golang-goprotobuf-dev
 
-# Install go-protobuf plugin
+# Install go-protobuf plugin (no need to do this if you won't change crimemap_service.proto)
   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
-# Install bazel
+# Install bazel 
   https://bazel.build/install
 
-# Generate BUILD files
+# Generate BUILD files (no need to do this if you haven't change golang code)
   bazel run //:gazelle
 
-# Compile protobuf
+# Compile protobuf (no need to do this if you haven't change crimemap_service.proto)
 ## take crimemap_service.proto for example
   protoc analytics/online/proto/crimemap_service/crimemap_service.proto -I. --go_out=:.
 

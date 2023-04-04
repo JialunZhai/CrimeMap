@@ -24,7 +24,7 @@ func Register(env env_interface.Env) error {
 
 func NewHTTPServer(env env_interface.Env) (*HTTPServer, error) {
 	server := &http.Server{
-		Addr:    ":8081",
+		Addr:    "localhost:8081",
 		Handler: http.FileServer(http.Dir("./analytics/online/webapp/app")),
 	}
 	return &HTTPServer{
@@ -34,7 +34,7 @@ func NewHTTPServer(env env_interface.Env) (*HTTPServer, error) {
 }
 
 func (s *HTTPServer) Run() error {
-	log.Println("Start to serve HTTP requests")
+	log.Printf("Start to serve HTTP requests from address: %v\n", s.server.Addr)
 	return s.server.ListenAndServe()
 }
 
