@@ -24,8 +24,9 @@
 # Build and run the whole project
   bazel run //analytics/online/server/cmd
 
-# Add new js lib
-  bazel run @nodejs//:yarn -- add libname.js
+# Add new package;
+## For more information, see https://github.com/bazelbuild/rules_nodejs/blob/stable/docs/dependencies.md
+  bazel run @yarn//:yarn -- add $PACKAGE_NAME
 
 # Clear useless modules from dependencies
   go tidy
@@ -49,7 +50,7 @@
   bazel run //:gazelle
 ### 5. you can compile the project now, but some errors will occur which can be solved by troubleshooting section in this README
 
-# WARNNING
+# WARNING
 - DONOT RUN `go mod vendor`: YOU CAN RUN IT ONLY IF YOU ARE ADDING AN EXTERNAL MODULE WHICH DOES NOT HAVE go.mod
 
 # Troubleshooting
