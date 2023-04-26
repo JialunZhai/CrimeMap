@@ -7,10 +7,24 @@ import (
 	"google.golang.org/grpc"
 )
 
+type Config struct {
+	Database struct {
+		Address string
+	}
+	GRPC struct {
+		Address string
+	}
+	HTTP struct {
+		Address string
+		Bundle  string
+	}
+}
+
 type Crime struct {
-	longitude float64
-	laitude   float64
-	time      int64
+	Longitude   float64
+	Laitude     float64
+	Time        int64
+	Description string
 }
 
 type HTTPServer interface {

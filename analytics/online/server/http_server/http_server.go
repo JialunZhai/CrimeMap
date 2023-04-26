@@ -2,6 +2,7 @@ package http_server
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 
@@ -14,7 +15,11 @@ type HTTPServer struct {
 }
 
 func Register(env env_interface.Env) error {
-	s, err := NewHTTPServer(env)
+	config := env.GetConfig()
+	if config == nil || config.HTTP.Address == "" {
+		return errors.New("HTTP server not configured")
+	}
+	s, err := NewHTTPServer(env, config.HTTP.Address, config.HTTP.Bundle)
 	if err != nil {
 		return err
 	}
@@ -22,10 +27,10 @@ func Register(env env_interface.Env) error {
 	return nil
 }
 
-func NewHTTPServer(env env_interface.Env) (*HTTPServer, error) {
+func NewHTTPServer(env env_interface.Env, address string, bundle string) (*HTTPServer, error) {
 	server := &http.Server{
-		Addr:    "localhost:8081",
-		Handler: http.FileServer(http.Dir("./analytics/online/webapp/app")),
+		Addr:    address,
+		Handler: http.FileServer(http.Dir(bundle)),
 	}
 	return &HTTPServer{
 		env:    env,

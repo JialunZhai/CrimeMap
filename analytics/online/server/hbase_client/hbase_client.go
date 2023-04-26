@@ -2,6 +2,7 @@ package hbase_client
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
@@ -15,7 +16,11 @@ type HBaseClient struct {
 }
 
 func Register(env env_interface.Env) error {
-	s, err := NewHBaseClient(env)
+	config := env.GetConfig()
+	if config == nil || config.Database.Address == "" {
+		return errors.New("HBase client not configured")
+	}
+	s, err := NewHBaseClient(env, config.Database.Address)
 	if err != nil {
 		return err
 	}
@@ -23,8 +28,7 @@ func Register(env env_interface.Env) error {
 	return nil
 }
 
-func NewHBaseClient(env env_interface.Env) (*HBaseClient, error) {
-	zkquorum := "localhost"
+func NewHBaseClient(env env_interface.Env, zkquorum string) (*HBaseClient, error) {
 	client := gohbase.NewClient(zkquorum)
 	log.Println("Connected to HBase server.")
 	return &HBaseClient{

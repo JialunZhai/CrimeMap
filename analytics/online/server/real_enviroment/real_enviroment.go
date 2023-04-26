@@ -5,6 +5,7 @@ import (
 )
 
 type RealEnv struct {
+	config          *interfaces.Config
 	httpServer      interfaces.HTTPServer
 	grpcServer      interfaces.GRPCServer
 	crimemapService interfaces.CrimeMapService
@@ -13,6 +14,13 @@ type RealEnv struct {
 
 func NewRealEnv() *RealEnv {
 	return &RealEnv{}
+}
+
+func (r *RealEnv) GetConfig() *interfaces.Config {
+	return r.config
+}
+func (r *RealEnv) SetConfig(c *interfaces.Config) {
+	r.config = c
 }
 
 func (r *RealEnv) GetHTTPServer() interfaces.HTTPServer {

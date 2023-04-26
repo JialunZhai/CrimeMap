@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -9,21 +10,32 @@ import (
 	"syscall"
 
 	cms "github.com/jialunzhai/crimemap/analytics/online/server/crimemap_service"
+	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 	"github.com/jialunzhai/crimemap/analytics/online/server/grpc_server"
-	"github.com/jialunzhai/crimemap/analytics/online/server/http_server"
-	real_env "github.com/jialunzhai/crimemap/analytics/online/server/real_enviroment"
 	"github.com/jialunzhai/crimemap/analytics/online/server/hbase_client"
+	"github.com/jialunzhai/crimemap/analytics/online/server/http_server"
+	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
+	real_env "github.com/jialunzhai/crimemap/analytics/online/server/real_enviroment"
 	"golang.org/x/sync/errgroup"
+	"gopkg.in/yaml.v3"
 )
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	env := real_env.NewRealEnv()
+
+	if len(os.Args) != 2 {
+		log.Fatalf("Usage: cmd ${PATH_TO_CONFIG}")
+	}
+	if err := loadConfig(env, os.Args[1]); err != nil {
+		log.Fatalf("Load config failed\n")
+	}
+
 	if err := hbase_client.Register(env); err != nil {
 		log.Fatalf("HBaseClient.Register failed with error: `%v`\n", err)
 	}
@@ -79,4 +91,20 @@ func main() {
 	if err := g.Wait(); err != nil {
 		log.Printf("main exited with error: `%v`\n", err)
 	}
+}
+
+func loadConfig(env env_interface.Env, configFile string) error {
+	rawConfig, err := os.ReadFile(configFile)
+	if err != nil {
+		return fmt.Errorf("read configure from file `%v` failed with error: `%v`\n", configFile, err)
+	}
+
+	config := interfaces.Config{}
+	if err := yaml.Unmarshal(rawConfig, &config); err != nil {
+		return err
+	}
+
+	env.SetConfig(&config)
+	log.Printf("Loaded config from `%v`.", configFile)
+	return nil
 }

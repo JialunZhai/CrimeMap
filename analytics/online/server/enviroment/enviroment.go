@@ -5,6 +5,8 @@ import (
 )
 
 type Env interface {
+	GetConfig() *interfaces.Config
+	SetConfig(*interfaces.Config)
 	GetHTTPServer() interfaces.HTTPServer
 	SetHTTPServer(interfaces.HTTPServer)
 	GetGRPCServer() interfaces.GRPCServer

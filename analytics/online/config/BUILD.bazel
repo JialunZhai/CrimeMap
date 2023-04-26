@@ -1,0 +1,5 @@
+filegroup(
+    name = "config",
+    srcs = ["crimemap.yaml"],
+    visibility = ["//visibility:public"],
+)

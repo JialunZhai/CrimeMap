@@ -1,6 +1,7 @@
 package grpc_server
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -16,7 +17,11 @@ type GRPCServer struct {
 }
 
 func Register(env env_interface.Env) error {
-	s, err := NewGRPCServer(env)
+	config := env.GetConfig()
+	if config == nil || config.GRPC.Address == "" {
+		return errors.New("gRPC server not configured")
+	}
+	s, err := NewGRPCServer(env, config.GRPC.Address)
 	if err != nil {
 		return err
 	}
@@ -24,8 +29,8 @@ func Register(env env_interface.Env) error {
 	return nil
 }
 
-func NewGRPCServer(env env_interface.Env) (*GRPCServer, error) {
-	listener, err := net.Listen("tcp", ":8080")
+func NewGRPCServer(env env_interface.Env, address string) (*GRPCServer, error) {
+	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +50,7 @@ func (s *GRPCServer) Run() error {
 	if s.env.GetCrimeMapService() == nil {
 		fmt.Errorf("CrimeMapServer.Register should be called before GRPCServer.Run")
 	}
-	log.Println("Start to serve gRPPC requests")
+	log.Printf("Start to serve gRPPC requests from address: %v\n", s.listener.Addr())
 	return s.server.Serve(s.listener)
 }
 
