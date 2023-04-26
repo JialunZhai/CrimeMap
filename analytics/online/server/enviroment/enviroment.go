@@ -11,6 +11,6 @@ type Env interface {
 	SetGRPCServer(interfaces.GRPCServer)
 	GetCrimeMapService() interfaces.CrimeMapService
 	SetCrimeMapService(interfaces.CrimeMapService)
-	GetTrinoClient() interfaces.TrinoClient
-	SetTrinoClient(interfaces.TrinoClient)
+	GetDatabaseClient() interfaces.DatabaseClient
+	SetDatabaseClient(interfaces.DatabaseClient)
 }

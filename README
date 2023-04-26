@@ -29,7 +29,7 @@
   bazel run @yarn//:yarn -- add $PACKAGE_NAME
 
 # Clear useless modules from dependencies
-  go tidy
+  go mod tidy
 
 # Add an external go-dependency
 ## If the source code of $MODULE_NAME has go.mod then
@@ -37,6 +37,8 @@
   go get $MODULE_NAME
 ### 2. add $MODULE_NAME an external bazel-repository
   bazel run //:gazelle update-repos $MODULE_NAME
+#### or update based on go.mod
+  bazel run //:gazelle -- update-repos -from_file=go.mod -to_macro=deps.bzl%go_dependencies
 ### 3. update BUILD.bazel for those who depend on $MODULE_NAME
   bazel run //:gazelle
 ## else
@@ -54,9 +56,8 @@
 - DONOT RUN `go mod vendor`: YOU CAN RUN IT ONLY IF YOU ARE ADDING AN EXTERNAL MODULE WHICH DOES NOT HAVE go.mod
 
 # Troubleshooting
-## After run go vendor, it will add all dependencies into vendor, leading gazelle works incorrectly.
+## After run go mod vendor, it will add all dependencies into vendor, leading gazelle works incorrectly.
 ## Those modules are typically direct dependencies. 
 ## You can delect those modules in vendor if gazelle generates a BUILD.bazel refer to them in vendor dir.
 ## For example, a known module has this behavior is google.golang.org/grpc, 
 ## you shoud remove vendor/google.golang.org/grpc everytime after you run go vendor.
-## However, trino should be referred locally as "//vendor/github.com/trinodb/trino-go-client/trino".

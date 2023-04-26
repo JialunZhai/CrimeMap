@@ -20,56 +20,11 @@ http_archive(
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("//:deps.bzl", "go_dependencies")
 
-go_repository(
-    name = "com_github_trinodb_trino_go_client",
-    importpath = "github.com/trinodb/trino-go-client",
-    sum = "h1:GjSG/60MdmaZHWmOsUAbpwjElCcgfoem6KvFWeJ0Hss=",
-    version = "v0.310.0",
-)
-
-go_repository(
-    name = "in_gopkg_jcmturner_gokrb5_v6",
-    importpath = "gopkg.in/jcmturner/gokrb5.v6",
-    sum = "h1:n0KFjpbuM5pFMN38/Ay+Br3l91netGSVqHPHEXeWUqk=",
-    version = "v6.1.1",
-)
-
-go_repository(
-    name = "com_github_jcmturner_gofork",
-    importpath = "github.com/jcmturner/gofork",
-    sum = "h1:QH0l3hzAU1tfT3rZCnW5zXl+orbkNMMRGJfdJjHVETg=",
-    version = "v1.7.6",
-)
-
-go_repository(
-    name = "org_golang_x_crypto",
-    importpath = "golang.org/x/crypto",
-    sum = "h1:AvwMYaRytfdeVt3u6mLaxYtErKYjxA2OXjJ1HHq6t3A=",
-    version = "v0.7.0",
-)
-
-go_repository(
-    name = "in_gopkg_jcmturner_dnsutils_v1",
-    importpath = "gopkg.in/jcmturner/dnsutils.v1",
-    sum = "h1:cIuC1OLRGZrld+16ZJvvZxVJeKPsvd5eUIvxfoN5hSM=",
-    version = "v1.0.1",
-)
-
-go_repository(
-    name = "in_gopkg_jcmturner_aescts_v1",
-    importpath = "gopkg.in/jcmturner/aescts.v1",
-    sum = "h1:cVVZBK2b1zY26haWB4vbBiZrfFQnfbTVrE3xZq6hrEw=",
-    version = "v1.0.1",
-)
-
-go_repository(
-    name = "com_github_hashicorp_go_uuid",
-    importpath = "github.com/hashicorp/go-uuid",
-    sum = "h1:2gKiV6YVmrJ1i2CKKa9obLvRieoRGviZFL26PcT/Co8=",
-    version = "v1.0.3",
-)
+# gazelle:repository_macro deps.bzl%go_dependencies
+go_dependencies()
 
 go_rules_dependencies()
 

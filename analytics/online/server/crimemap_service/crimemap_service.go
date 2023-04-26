@@ -33,6 +33,6 @@ func NewCrimeMapService(env env_interface.Env) (*CrimeMapService, error) {
 }
 
 func (s *CrimeMapService) GetCrimes(ctx context.Context, _ *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error) {
-	// TODO: implement this with trino_client.GetCrimes
+	// TODO: implement this with env.GetDatabaseClient().GetCrimes
 	return &cmspb.GetCrimesResponse{}, nil
 }

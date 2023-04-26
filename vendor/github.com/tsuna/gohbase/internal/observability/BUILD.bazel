@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "observability",
+    srcs = ["observability.go"],
+    importmap = "github.com/jialunzhai/crimemap/vendor/github.com/tsuna/gohbase/internal/observability",
+    importpath = "github.com/tsuna/gohbase/internal/observability",
+    visibility = ["//vendor/github.com/tsuna/gohbase:__subpackages__"],
+    deps = [
+        "//vendor/github.com/prometheus/client_golang/prometheus",
+        "//vendor/github.com/tsuna/gohbase/pb",
+        "//vendor/go.opentelemetry.io/otel",
+        "//vendor/go.opentelemetry.io/otel/trace",
+    ],
+)

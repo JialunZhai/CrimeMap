@@ -2,29 +2,32 @@ module github.com/jialunzhai/crimemap
 
 go 1.20
 
-replace (
-	gopkg.in/jcmturner/gokrb5.v6 => ./vendor/gopkg.in/jcmturner/gokrb5.v6
-	gopkg.in/jcmturner/rpc.v1 => ./vendor/gopkg.in/jcmturner/rpc.v1
-)
-
 require (
 	github.com/golang/protobuf v1.5.2
-	github.com/trinodb/trino-go-client v0.310.0
+	github.com/tsuna/gohbase v0.0.0-20230329174459-f15274ad1309
 	golang.org/x/sync v0.1.0
 	google.golang.org/grpc v1.54.0
 )
 
 require (
-	github.com/hashicorp/go-uuid v1.0.3 // indirect
-	github.com/jcmturner/gofork v1.7.6 // indirect
-	golang.org/x/crypto v0.6.0 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/go-logr/logr v1.2.3 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-zookeeper/zk v1.0.3 // indirect
+	github.com/golang/snappy v0.0.4 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.2 // indirect
+	github.com/prometheus/client_golang v1.13.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
+	github.com/prometheus/common v0.37.0 // indirect
+	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
+	go.opentelemetry.io/otel v1.11.1 // indirect
+	go.opentelemetry.io/otel/trace v1.11.1 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
-	gopkg.in/jcmturner/aescts.v1 v1.0.1 // indirect
-	gopkg.in/jcmturner/dnsutils.v1 v1.0.1 // indirect
-	gopkg.in/jcmturner/gokrb5.v6 v6.1.1 // indirect
-	gopkg.in/jcmturner/rpc.v1 v1.1.0 // indirect
+	modernc.org/b/v2 v2.1.0 // indirect
 )

@@ -28,7 +28,7 @@ type CrimeMapService interface {
 	GetCrimes(ctx context.Context, req *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error)
 }
 
-type TrinoClient interface {
+type DatabaseClient interface {
 	GetCrimes(ctx context.Context, minX float64, maxX float64, minY float64, maxY float64) ([]*Crime, error)
 	Close() error
 }

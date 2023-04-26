@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "testdata",
-    srcs = ["test_vectors.go"],
-    importmap = "github.com/jialunzhai/crimemap/vendor/gopkg.in/jcmturner/gokrb5.v6/testdata",
-    importpath = "gopkg.in/jcmturner/gokrb5.v6/testdata",
-    visibility = ["//visibility:public"],
-)

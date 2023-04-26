@@ -12,7 +12,7 @@ import (
 	"github.com/jialunzhai/crimemap/analytics/online/server/grpc_server"
 	"github.com/jialunzhai/crimemap/analytics/online/server/http_server"
 	real_env "github.com/jialunzhai/crimemap/analytics/online/server/real_enviroment"
-	"github.com/jialunzhai/crimemap/analytics/online/server/trino_client"
+	"github.com/jialunzhai/crimemap/analytics/online/server/hbase_client"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -24,8 +24,8 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	env := real_env.NewRealEnv()
-	if err := trino_client.Register(env); err != nil {
-		log.Fatalf("TrinoClient.Register failed with error: `%v`\n", err)
+	if err := hbase_client.Register(env); err != nil {
+		log.Fatalf("HBaseClient.Register failed with error: `%v`\n", err)
 	}
 	if err := grpc_server.Register(env); err != nil {
 		log.Fatalf("GRPCServer.Register failed with error: `%v`\n", err)
@@ -70,10 +70,10 @@ func main() {
 		break
 	}
 
-	if err := env.GetTrinoClient().Close(); err != nil {
-		log.Fatalf("TrinoClient closed with error: `%v`\n", err)
+	if err := env.GetDatabaseClient().Close(); err != nil {
+		log.Fatalf("DatabaseClient closed with error: `%v`\n", err)
 	}
-	log.Printf("TrinoClient gracefully closed\n")
+	log.Printf("DatabaseClient gracefully closed\n")
 
 	// wait for all go-routines in errgroup to return
 	if err := g.Wait(); err != nil {

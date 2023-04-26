@@ -8,7 +8,7 @@ type RealEnv struct {
 	httpServer      interfaces.HTTPServer
 	grpcServer      interfaces.GRPCServer
 	crimemapService interfaces.CrimeMapService
-	trinoClient     interfaces.TrinoClient
+	databaseClient  interfaces.DatabaseClient
 }
 
 func NewRealEnv() *RealEnv {
@@ -39,10 +39,10 @@ func (r *RealEnv) SetCrimeMapService(s interfaces.CrimeMapService) {
 	r.crimemapService = s
 }
 
-func (r *RealEnv) GetTrinoClient() interfaces.TrinoClient {
-	return r.trinoClient
+func (r *RealEnv) GetDatabaseClient() interfaces.DatabaseClient {
+	return r.databaseClient
 }
 
-func (r *RealEnv) SetTrinoClient(s interfaces.TrinoClient) {
-	r.trinoClient = s
+func (r *RealEnv) SetDatabaseClient(s interfaces.DatabaseClient) {
+	r.databaseClient = s
 }
