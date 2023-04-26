@@ -14,7 +14,7 @@ go_library(
         "//analytics/online/server/hbase_client",
         "//analytics/online/server/http_server",
         "//analytics/online/server/real_enviroment",
-        "//vendor/golang.org/x/sync/errgroup",
+        "@org_golang_x_sync//errgroup",
     ],
 )
 

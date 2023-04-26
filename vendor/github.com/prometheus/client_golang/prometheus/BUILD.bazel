@@ -82,7 +82,7 @@ go_library(
             "//vendor/github.com/prometheus/procfs",
         ],
         "@io_bazel_rules_go//go/platform:windows": [
-            "//vendor/golang.org/x/sys/windows",
+            "@org_golang_x_sys//windows",
         ],
         "//conditions:default": [],
     }),
