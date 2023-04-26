@@ -5,8 +5,9 @@
   sudo apt install protobuf-compiler
   sudo apt install golang-goprotobuf-dev
 
-# Install go-protobuf plugin (no need to do this if you won't change crimemap_service.proto)
+# Install go-protobuf plugin and grpc plugin (no need to do this if you won't change crimemap_service.proto)
   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+  go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 # Install bazel 
   https://bazel.build/install
@@ -16,7 +17,11 @@
 
 # Compile protobuf (no need to do this if you haven't change crimemap_service.proto)
 ## take crimemap_service.proto for example
-  protoc analytics/online/proto/crimemap_service/crimemap_service.proto -I. --go_out=:.
+### 1. change go_package to "./crimemap_service" in crimemap_service.proto
+### 2. compile grpc-proto, then your IDE will not complain about proto
+  PATH="${PATH}:${HOME}/go/bin" protoc --go_out=:. --go-grpc_out=. crimemap_service.proto
+### 3. change go_package back to "crimemap_service" in crimemap_service.proto
+### 4. you can ignore the proto
 
 # Build the whole project
   bazel build //analytics/online/server/cmd
@@ -28,7 +33,7 @@
 ## For more information, see https://github.com/bazelbuild/rules_nodejs/blob/stable/docs/dependencies.md
   bazel run @yarn//:yarn -- add $PACKAGE_NAME
 
-# Clear useless modules from dependencies
+# Clear useless modules and add required ones from dependencies
   go mod tidy
 
 # Add an external go-dependency
@@ -60,4 +65,5 @@
 ## Those modules are typically direct dependencies. 
 ## You can delect those modules in vendor if gazelle generates a BUILD.bazel refer to them in vendor dir.
 ## For example, a known module has this behavior is google.golang.org/grpc, 
-## you shoud remove vendor/google.golang.org/grpc everytime after you run go vendor.
+## you shoud remove vendor/google.golang.org/grpc everytime after you run go vendor, 
+## and also remember to remove google.golang.org/grpc from vendor/modules.txt

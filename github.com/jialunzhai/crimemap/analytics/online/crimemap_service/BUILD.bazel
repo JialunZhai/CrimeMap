@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "crimemap_service",
+    srcs = [
+        "crimemap_service.pb.go",
+        "crimemap_service_grpc.pb.go",
+    ],
+    importpath = "github.com/jialunzhai/crimemap/github.com/jialunzhai/crimemap/analytics/online/crimemap_service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto",
+        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
+    ],
+)
