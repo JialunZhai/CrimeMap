@@ -9,9 +9,6 @@ github.com/tsuna/gohbase/internal/observability
 github.com/tsuna/gohbase/pb
 github.com/tsuna/gohbase/region
 github.com/tsuna/gohbase/zk
-# google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f
-## explicit; go 1.19
-google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/protobuf v1.28.1
 ## explicit; go 1.11
 google.golang.org/protobuf/encoding/protojson
