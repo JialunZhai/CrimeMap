@@ -25,6 +25,6 @@ go_library(
         "//vendor/github.com/tsuna/gohbase/zk",
         "//vendor/go.opentelemetry.io/otel/codes",
         "//vendor/google.golang.org/protobuf/proto",
-        "//vendor/modernc.org/b/v2:b",
+        "@org_modernc_b_v2//:b",
     ],
 )
