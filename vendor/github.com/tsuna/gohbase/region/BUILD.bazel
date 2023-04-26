@@ -14,13 +14,13 @@ go_library(
     importpath = "github.com/tsuna/gohbase/region",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/prometheus/client_golang/prometheus",
-        "//vendor/github.com/prometheus/client_golang/prometheus/promauto",
-        "//vendor/github.com/sirupsen/logrus",
         "//vendor/github.com/tsuna/gohbase/compression",
         "//vendor/github.com/tsuna/gohbase/hrpc",
         "//vendor/github.com/tsuna/gohbase/pb",
         "//vendor/google.golang.org/protobuf/encoding/protowire",
         "//vendor/google.golang.org/protobuf/proto",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "@com_github_sirupsen_logrus//:logrus",
     ],
 )

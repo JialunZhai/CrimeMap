@@ -6,5 +6,5 @@ go_library(
     importmap = "github.com/jialunzhai/crimemap/vendor/github.com/tsuna/gohbase/compression/snappy",
     importpath = "github.com/tsuna/gohbase/compression/snappy",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/golang/snappy"],
+    deps = ["@com_github_golang_snappy//:snappy"],
 )

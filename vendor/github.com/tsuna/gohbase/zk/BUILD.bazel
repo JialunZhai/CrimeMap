@@ -7,9 +7,9 @@ go_library(
     importpath = "github.com/tsuna/gohbase/zk",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/go-zookeeper/zk",
-        "//vendor/github.com/sirupsen/logrus",
         "//vendor/github.com/tsuna/gohbase/pb",
         "//vendor/google.golang.org/protobuf/proto",
+        "@com_github_go_zookeeper_zk//:zk",
+        "@com_github_sirupsen_logrus//:logrus",
     ],
 )
