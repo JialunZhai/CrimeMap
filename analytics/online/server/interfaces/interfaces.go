@@ -14,6 +14,9 @@ type Config struct {
 	GRPC struct {
 		Address string
 	}
+	GRPCWeb struct {
+		Address string
+	}
 	HTTP struct {
 		Address string
 		Bundle  string
@@ -36,6 +39,11 @@ type GRPCServer interface {
 	GetServer() *grpc.Server
 	Run() error
 	Shutdown()
+}
+
+type GRPCWebServer interface {
+	Run() error
+	Shutdown(ctx context.Context) error
 }
 
 type CrimeMapService interface {

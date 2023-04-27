@@ -26,8 +26,8 @@
 # Build the whole project
   bazel build //analytics/online/server/cmd
 
-# Build and run the whole project
-  bazel run //analytics/online/server/cmd
+# Build and run the whole project with configure file
+  bazel run //analytics/online/server/cmd ./analytics/online/config/crimemap.yaml
 
 # Add new package;
 ## For more information, see https://github.com/bazelbuild/rules_nodejs/blob/stable/docs/dependencies.md

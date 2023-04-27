@@ -11,6 +11,8 @@ type Env interface {
 	SetHTTPServer(interfaces.HTTPServer)
 	GetGRPCServer() interfaces.GRPCServer
 	SetGRPCServer(interfaces.GRPCServer)
+	GetGRPCWebServer() interfaces.GRPCWebServer
+	SetGRPCWebServer(interfaces.GRPCWebServer)
 	GetCrimeMapService() interfaces.CrimeMapService
 	SetCrimeMapService(interfaces.CrimeMapService)
 	GetDatabaseClient() interfaces.DatabaseClient

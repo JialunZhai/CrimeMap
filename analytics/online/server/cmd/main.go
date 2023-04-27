@@ -12,6 +12,7 @@ import (
 	cms "github.com/jialunzhai/crimemap/analytics/online/server/crimemap_service"
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 	"github.com/jialunzhai/crimemap/analytics/online/server/grpc_server"
+	"github.com/jialunzhai/crimemap/analytics/online/server/grpc_web_server"
 	"github.com/jialunzhai/crimemap/analytics/online/server/hbase_client"
 	"github.com/jialunzhai/crimemap/analytics/online/server/http_server"
 	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
@@ -45,6 +46,9 @@ func main() {
 	if err := cms.Register(env); err != nil {
 		log.Fatalf("CrimeMapServer.Register failed with error: `%v`\n", err)
 	}
+	if err := grpc_web_server.Register(env); err != nil {
+		log.Fatalf("GRPCWeb.Register failed with error: `%v`\n", err)
+	}
 	if err := http_server.Register(env); err != nil {
 		log.Fatalf("HTTPServer.Register failed with error: `%v`\n", err)
 	}
@@ -56,6 +60,15 @@ func main() {
 			log.Printf("GRPCServer shutdowned with error: `%v`\n", err)
 		}
 		log.Printf("GRPCServer gracefully shutdowned\n")
+		return err
+	})
+	g.Go(func() error {
+		err := env.GetGRPCWebServer().Run()
+		if err != http.ErrServerClosed {
+			log.Printf("GRPCWebServer shutdowned with error: `%v`\n", err)
+			return err
+		}
+		log.Printf("GRPCWebServer gracefully shutdowned\n")
 		return err
 	})
 	g.Go(func() error {
@@ -74,6 +87,7 @@ func main() {
 		// received signal, cancel context
 		log.Printf("Received signal: `%v`\n", sig)
 		env.GetHTTPServer().Shutdown(ctx)
+		env.GetGRPCWebServer().Shutdown(ctx)
 		env.GetGRPCServer().Shutdown()
 		cancel()
 		break

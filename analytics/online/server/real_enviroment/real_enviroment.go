@@ -8,6 +8,7 @@ type RealEnv struct {
 	config          *interfaces.Config
 	httpServer      interfaces.HTTPServer
 	grpcServer      interfaces.GRPCServer
+	grpcWebServer   interfaces.GRPCWebServer
 	crimemapService interfaces.CrimeMapService
 	databaseClient  interfaces.DatabaseClient
 }
@@ -37,6 +38,14 @@ func (r *RealEnv) GetGRPCServer() interfaces.GRPCServer {
 
 func (r *RealEnv) SetGRPCServer(s interfaces.GRPCServer) {
 	r.grpcServer = s
+}
+
+func (r *RealEnv) GetGRPCWebServer() interfaces.GRPCWebServer {
+	return r.grpcWebServer
+}
+
+func (r *RealEnv) SetGRPCWebServer(s interfaces.GRPCWebServer) {
+	r.grpcWebServer = s
 }
 
 func (r *RealEnv) GetCrimeMapService() interfaces.CrimeMapService {

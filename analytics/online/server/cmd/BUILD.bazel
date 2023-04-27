@@ -13,6 +13,7 @@ go_library(
         "//analytics/online/server/crimemap_service",
         "//analytics/online/server/enviroment",
         "//analytics/online/server/grpc_server",
+        "//analytics/online/server/grpc_web_server",
         "//analytics/online/server/hbase_client",
         "//analytics/online/server/http_server",
         "//analytics/online/server/interfaces",

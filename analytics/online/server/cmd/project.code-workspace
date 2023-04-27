@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "../../../.."
+    },
+    {
+      "path": "../../../../../Crime-map"
+    },
+    {
+      "path": "../../../../../bazel-examples"
+    },
+    {
+      "path": "../../../../../../grpc-web-example"
+    }
+  ]
+}
