@@ -25,7 +25,7 @@ import (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-
+	
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
@@ -35,71 +35,95 @@ func main() {
 		log.Fatalf("Usage: cmd ${PATH_TO_CONFIG}")
 	}
 	if err := loadConfig(env, os.Args[1]); err != nil {
-		log.Fatalf("Load config failed\n")
+		log.Fatalf("Load config failed with error: `%v`\n", err)
+	}
+	config := env.GetConfig()
+	if config == nil {
+		log.Fatalf("Load config failed with error: `empty config file`\n")
 	}
 
 	if err := hbase_client.Register(env); err != nil {
 		log.Fatalf("HBaseClient.Register failed with error: `%v`\n", err)
 	}
-	if err := grpc_server.Register(env); err != nil {
-		log.Fatalf("GRPCServer.Register failed with error: `%v`\n", err)
+	if config.GRPC.Address != "" {
+		if err := grpc_server.Register(env); err != nil {
+			log.Fatalf("GRPCServer.Register failed with error: `%v`\n", err)
+		}
 	}
 	if err := cms.Register(env); err != nil {
 		log.Fatalf("CrimeMapServer.Register failed with error: `%v`\n", err)
 	}
-	if err := grpc_web_server.Register(env); err != nil {
-		log.Fatalf("GRPCWeb.Register failed with error: `%v`\n", err)
+	if config.GRPCWeb.Address != "" {
+		if err := grpc_web_server.Register(env); err != nil {
+			log.Fatalf("GRPCWeb.Register failed with error: `%v`\n", err)
+		}
 	}
-	if err := http_server.Register(env); err != nil {
-		log.Fatalf("HTTPServer.Register failed with error: `%v`\n", err)
+	if config.HTTP.Address != "" {
+		if err := http_server.Register(env); err != nil {
+			log.Fatalf("HTTPServer.Register failed with error: `%v`\n", err)
+		}
 	}
 
 	g, ctx := errgroup.WithContext(ctx)
 
-	log.Println("Try to connect to database with timeout...")
-	ctxWithTimeout, timeout := context.WithTimeout(ctx, time.Duration(time.Second*4))
-	defer timeout()
-	err := env.GetDatabaseClient().Conn(ctxWithTimeout)
-	if err != nil {
-		log.Printf("DatabaseClient.Conn failed with error: `%v`\n", err)
-	}
-	log.Println("Connected to database.")
-
-	g.Go(func() error {
-		err := env.GetGRPCServer().Run()
+	if env.GetDatabaseClient() != nil {
+		log.Println("Try to connect to database with timeout...")
+		ctxWithTimeout, timeout := context.WithTimeout(ctx, time.Duration(time.Second*4))
+		defer timeout()
+		err := env.GetDatabaseClient().Conn(ctxWithTimeout)
 		if err != nil {
-			log.Printf("GRPCServer shutdowned with error: `%v`\n", err)
+			log.Fatalf("DatabaseClient.Conn failed with error: `%v`\n", err)
 		}
-		log.Printf("GRPCServer gracefully shutdowned\n")
-		return err
-	})
-	g.Go(func() error {
-		err := env.GetGRPCWebServer().Run()
-		if err != http.ErrServerClosed {
-			log.Printf("GRPCWebServer shutdowned with error: `%v`\n", err)
+		log.Println("Connected to database.")
+	}
+
+	if env.GetGRPCServer() != nil {
+		g.Go(func() error {
+			err := env.GetGRPCServer().Run()
+			if err != nil {
+				log.Printf("GRPCServer shutdowned with error: `%v`\n", err)
+			}
+			log.Printf("GRPCServer gracefully shutdowned\n")
 			return err
-		}
-		log.Printf("GRPCWebServer gracefully shutdowned\n")
-		return err
-	})
-	g.Go(func() error {
-		err := env.GetHTTPServer().Run()
-		if err != http.ErrServerClosed {
-			log.Printf("HTTPServer shutdowned with error: `%v`\n", err)
+		})
+	}
+	if env.GetGRPCWebServer() != nil {
+		g.Go(func() error {
+			err := env.GetGRPCWebServer().Run()
+			if err != http.ErrServerClosed {
+				log.Printf("GRPCWebServer shutdowned with error: `%v`\n", err)
+				return err
+			}
+			log.Printf("GRPCWebServer gracefully shutdowned\n")
 			return err
-		}
-		log.Printf("HTTPServer gracefully shutdowned\n")
-		return err
-	})
+		})
+	}
+	if env.GetHTTPServer() != nil {
+		g.Go(func() error {
+			err := env.GetHTTPServer().Run()
+			if err != http.ErrServerClosed {
+				log.Printf("HTTPServer shutdowned with error: `%v`\n", err)
+				return err
+			}
+			log.Printf("HTTPServer gracefully shutdowned\n")
+			return err
+		})
+	}
 
 	// wait for signals
 	select {
 	case sig := <-sigs:
 		// received signal, cancel context in the reverse order
 		log.Printf("Received signal: `%v`\n", sig)
-		env.GetHTTPServer().Shutdown(ctx)
-		env.GetGRPCWebServer().Shutdown(ctx)
-		env.GetGRPCServer().Shutdown()
+		if env.GetHTTPServer() != nil {
+			env.GetHTTPServer().Shutdown(ctx)
+		}
+		if env.GetGRPCWebServer() != nil {
+			env.GetGRPCWebServer().Shutdown(ctx)
+		}
+		if env.GetGRPCServer() != nil {
+			env.GetGRPCServer().Shutdown()
+		}
 		cancel()
 		break
 	case <-ctx.Done():
@@ -107,10 +131,12 @@ func main() {
 		break
 	}
 
-	if err := env.GetDatabaseClient().Close(); err != nil {
-		log.Fatalf("DatabaseClient closed with error: `%v`\n", err)
+	if env.GetDatabaseClient() != nil {
+		if err := env.GetDatabaseClient().Close(); err != nil {
+			log.Fatalf("DatabaseClient closed with error: `%v`\n", err)
+		}
+		log.Printf("DatabaseClient gracefully closed\n")
 	}
-	log.Printf("DatabaseClient gracefully closed\n")
 
 	// wait for all go-routines in errgroup to return
 	if err := g.Wait(); err != nil {

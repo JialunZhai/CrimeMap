@@ -18,7 +18,7 @@ type HTTPServer struct {
 
 func Register(env env_interface.Env) error {
 	config := env.GetConfig()
-	if config == nil || config.HTTP.Address == "" {
+	if config == nil || config.GRPCWeb.Address == "" {
 		return errors.New("gRPC web server not configured")
 	}
 	grpcServer := env.GetGRPCServer()

@@ -1,0 +1,6 @@
+database:
+  address: localhost
+grpc:
+  address: :8079
+grpcweb:
+  address: localhost:8080
