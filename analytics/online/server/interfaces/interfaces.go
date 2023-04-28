@@ -51,6 +51,7 @@ type CrimeMapService interface {
 }
 
 type DatabaseClient interface {
+	Conn(ctx context.Context) error
 	GetCrimes(ctx context.Context, minX float64, maxX float64, minY float64, maxY float64) ([]*Crime, error)
 	Close() error
 }

@@ -67,3 +67,18 @@
 ## For example, a known module has this behavior is google.golang.org/grpc, 
 ## you shoud remove vendor/google.golang.org/grpc everytime after you run go vendor, 
 ## and also remember to remove google.golang.org/grpc from vendor/modules.txt
+
+
+# Map host names of HBase to localhost
+## edit the localhost line in your /etc/hosts to
+127.0.0.1       localhost       nyu-dataproc-w-0.c.hpc-dataproc-19b8.internal   nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal
+## check whether your machine search /etc/hosts before query for DNS
+## verify the `hosts` line in your /etc/nsswitch.conf , `files` is at the left of dns like this
+hosts:          files dns
+## check whether you map the host names of HBase correctly:
+ping nyu-dataproc-w-0.c.hpc-dataproc-19b8.internal
+ping nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal
+# Set up a proxy to forword the request to Dataproc
+gcloud compute ssh nyu-dataproc-m --project hpc-dataproc-19b8 --zone us-central1-f -- -N -L 2181:localhost:2181
+gcloud compute ssh nyu-dataproc-m --project hpc-dataproc-19b8 --zone us-central1-f -- -N -L 16020:nyu-dataproc-w-0.c.hpc-dataproc-19b8.internal:16020
+gcloud compute ssh nyu-dataproc-m --project hpc-dataproc-19b8 --zone us-central1-f -- -N -L 16021:nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal:16020

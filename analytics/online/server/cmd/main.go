@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	cms "github.com/jialunzhai/crimemap/analytics/online/server/crimemap_service"
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
@@ -54,6 +55,16 @@ func main() {
 	}
 
 	g, ctx := errgroup.WithContext(ctx)
+
+	log.Println("Try to connect to database with timeout...")
+	ctxWithTimeout, timeout := context.WithTimeout(ctx, time.Duration(time.Second*4))
+	defer timeout()
+	err := env.GetDatabaseClient().Conn(ctxWithTimeout)
+	if err != nil {
+		log.Printf("DatabaseClient.Conn failed with error: `%v`\n", err)
+	}
+	log.Println("Connected to database.")
+
 	g.Go(func() error {
 		err := env.GetGRPCServer().Run()
 		if err != nil {
@@ -84,7 +95,7 @@ func main() {
 	// wait for signals
 	select {
 	case sig := <-sigs:
-		// received signal, cancel context
+		// received signal, cancel context in the reverse order
 		log.Printf("Received signal: `%v`\n", sig)
 		env.GetHTTPServer().Shutdown(ctx)
 		env.GetGRPCWebServer().Shutdown(ctx)
