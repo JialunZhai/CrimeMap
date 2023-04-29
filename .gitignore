@@ -1,4 +1,5 @@
+analytics/offline/data_importing/target
+analytics/offline/data_importing/*.jar
 bazel-*
-bazel-out
 dist
 node_modules
