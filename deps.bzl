@@ -92,6 +92,12 @@ def go_dependencies():
         sum = "h1:ByYyxL9InA1OWqxJqqp2A5pYHUrCiAL6K3J+LKSsQkY=",
         version = "v0.1.0",
     )
+    go_repository(
+        name = "com_github_broady_gogeohash",
+        importpath = "github.com/broady/gogeohash",
+        sum = "h1:iEdmkrNMLXbM7ecffOAtZJQOQUTE4iMonxrb5opUgE4=",
+        version = "v0.0.0-20120525094510-7b2c40d64042",
+    )
 
     go_repository(
         name = "com_github_burntsushi_toml",
@@ -192,6 +198,13 @@ def go_dependencies():
         version = "v0.0.0-20161010025455-3a0bb77429bd",
     )
     go_repository(
+        name = "com_github_codefor_geohash",
+        importpath = "github.com/Codefor/geohash",
+        sum = "h1:iG9B49Q218F/XxXNRM7k/vWf7MKmLIS8AcJV9cGN4nA=",
+        version = "v0.0.0-20140723084247-1b41c28e3a9d",
+    )
+
+    go_repository(
         name = "com_github_coreos_go_semver",
         importpath = "github.com/coreos/go-semver",
         sum = "h1:3Jm3tLmsgAYcjC+4Up7hJrFBPr+n7rAqYeSw/SZazuY=",
@@ -283,6 +296,13 @@ def go_dependencies():
         sum = "h1:PS7VIOgmSVhWUEeZwTe7z7zouA22Cr590PzXKbZHOVY=",
         version = "v0.9.1",
     )
+    go_repository(
+        name = "com_github_fanixk_geohash",
+        importpath = "github.com/fanixk/geohash",
+        sum = "h1:Fyfh/dsHFrC6nkX7H7+nFdTd1wROlX/FxEIWVpKYf1U=",
+        version = "v0.0.0-20150324002647-c1f9b5fa157a",
+    )
+
     go_repository(
         name = "com_github_fatih_color",
         importpath = "github.com/fatih/color",
@@ -905,6 +925,12 @@ def go_dependencies():
         sum = "h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=",
         version = "v1.1.2",
     )
+    go_repository(
+        name = "com_github_mmcloughlin_geohash",
+        importpath = "github.com/mmcloughlin/geohash",
+        sum = "h1:9w1HchfDfdeLc+jFEf/04D27KP7E2QmpDu52wPbJWRE=",
+        version = "v0.10.0",
+    )
 
     go_repository(
         name = "com_github_modern_go_concurrent",
@@ -1055,6 +1081,18 @@ def go_dependencies():
         importpath = "github.com/pierrec/lz4",
         sum = "h1:2xWsjqPFWcplujydGg4WmhC/6fZqK42wMM8aXeqhl0I=",
         version = "v2.0.5+incompatible",
+    )
+    go_repository(
+        name = "com_github_pierrre_compare",
+        importpath = "github.com/pierrre/compare",
+        sum = "h1:57z388tk9GXcyLnLXh1pMRdCQrfUH056x9dyNCCZZtg=",
+        version = "v1.1.0",
+    )
+    go_repository(
+        name = "com_github_pierrre_geohash",
+        importpath = "github.com/pierrre/geohash",
+        sum = "h1:AeTekkssK2HV3le9vya4cVFIPMx60bVIHaTvC+/5vyc=",
+        version = "v1.1.0",
     )
 
     go_repository(
@@ -1250,10 +1288,23 @@ def go_dependencies():
         version = "v1.8.0",
     )
     go_repository(
+        name = "com_github_the42_cartconvert",
+        importpath = "github.com/the42/cartconvert",
+        sum = "h1:I4DY8wLxJXCrMYzDM6lKCGc3IQwJX0PlTLsd3nQqI3c=",
+        version = "v0.0.0-20131203171324-aae784c392b8",
+    )
+
+    go_repository(
         name = "com_github_tmc_grpc_websocket_proxy",
         importpath = "github.com/tmc/grpc-websocket-proxy",
         sum = "h1:ndzgwNDnKIqyCvHTXaCqh9KlOWKvBry6nuXMJmonVsE=",
         version = "v0.0.0-20170815181823-89b8d40f7ca8",
+    )
+    go_repository(
+        name = "com_github_tomihiltunen_geohash_golang",
+        importpath = "github.com/TomiHiltunen/geohash-golang",
+        sum = "h1:wumPkzt4zaxO4rHPBrjDK8iZMR41C1qs7njNqlacwQg=",
+        version = "v0.0.0-20150112065804-b3e4e625abfb",
     )
 
     go_repository(

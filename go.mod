@@ -18,6 +18,7 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/improbable-eng/grpc-web v0.15.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2 // indirect
+	github.com/pierrre/geohash v1.1.0 // indirect
 	github.com/prometheus/client_golang v1.13.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
