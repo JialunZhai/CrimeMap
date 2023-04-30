@@ -93,7 +93,7 @@ func (c *HBaseClient) Conn(ctx context.Context) error {
 func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude, minLaitude, maxLaitude float64, minTime, maxTime int64) ([]*interfaces.Crime, error) {
 	fmt.Printf("DEBUG: GetCrimes received minLong=%v, maxLong=%v, minLa=%v, maxLa=%v, minT=%v, maxT=%v\n",
 		minLongitude, maxLongitude, minLaitude, maxLaitude, minTime, maxTime)
-	if minLongitude > maxLongitude || minLaitude > maxLaitude || minTime > minTime {
+	if minLongitude > maxLongitude || minLaitude > maxLaitude || minTime > maxTime {
 		return nil, fmt.Errorf("HBase client warnning: bad query arguments for GetCrimes")
 	}
 
@@ -112,7 +112,7 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 		maxNormalizedY := normalizeCoordinate(maxLaitude, -90.0)
 
 		minNormalizedT := normalizeTime(minTime)
-		maxNormalizedT := normalizeTime(minTime)
+		maxNormalizedT := normalizeTime(maxTime)
 	*/
 
 	scanRequest, err := hrpc.NewScanStr(ctx, c.table, hrpc.Filters(prefixRowKeyFilter))
