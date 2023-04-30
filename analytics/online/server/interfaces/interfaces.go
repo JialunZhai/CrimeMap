@@ -9,8 +9,8 @@ import (
 
 type Config struct {
 	Database struct {
-		Address   string
-		Table     string
+		Address string
+		Table   string
 	}
 	GRPC struct {
 		Address string
@@ -53,6 +53,6 @@ type CrimeMapService interface {
 
 type DatabaseClient interface {
 	Conn(ctx context.Context) error
-	GetCrimes(ctx context.Context, minX, maxX, minY, maxY float64, minT, maxT int64) ([]*Crime, error)
+	GetCrimes(ctx context.Context, minLongitude, maxLongitude, minLaitude, maxLaitude float64, minTime, maxTime int64) ([]*Crime, error)
 	Close() error
 }

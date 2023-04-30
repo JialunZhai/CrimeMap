@@ -90,27 +90,29 @@ func (c *HBaseClient) Conn(ctx context.Context) error {
 	return nil
 }
 
-func (c *HBaseClient) GetCrimes(ctx context.Context, minX, maxX, minY, maxY float64, minT, maxT int64) ([]*interfaces.Crime, error) {
-	if minX > maxX || minY > maxY || minT > maxT {
+func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude, minLaitude, maxLaitude float64, minTime, maxTime int64) ([]*interfaces.Crime, error) {
+	fmt.Printf("DEBUG: GetCrimes received minLong=%v, maxLong=%v, minLa=%v, maxLa=%v, minT=%v, maxT=%v\n",
+		minLongitude, maxLongitude, minLaitude, maxLaitude, minTime, maxTime)
+	if minLongitude > maxLongitude || minLaitude > maxLaitude || minTime > minTime {
 		return nil, fmt.Errorf("HBase client warnning: bad query arguments for GetCrimes")
 	}
 
 	crimes := make([]*interfaces.Crime, 0)
 
-	minHash := geohash.Encode(minY, minX, maxPrecision)
-	maxHash := geohash.Encode(maxY, maxX, maxPrecision)
+	minHash := geohash.Encode(minLaitude, minLongitude, maxPrecision)
+	maxHash := geohash.Encode(maxLaitude, maxLongitude, maxPrecision)
 	prefixRowKey := longestCommonPrefix(minHash, maxHash)
 	prefixRowKeyFilter := filter.NewPrefixFilter([]byte(prefixRowKey))
 
 	/*
-		minNormalizedX := normalizeCoordinate(minX, -180.0)
-		maxNormalizedX := normalizeCoordinate(maxX, -180.0)
+		minNormalizedX := normalizeCoordinate(minLongitude, -180.0)
+		maxNormalizedX := normalizeCoordinate(maxLongitude, -180.0)
 
-		minNormalizedY := normalizeCoordinate(minY, -90.0)
-		maxNormalizedY := normalizeCoordinate(maxY, -90.0)
+		minNormalizedY := normalizeCoordinate(minLaitude, -90.0)
+		maxNormalizedY := normalizeCoordinate(maxLaitude, -90.0)
 
-		minNormalizedT := normalizeTime(minT)
-		maxNormalizedT := normalizeTime(maxT)
+		minNormalizedT := normalizeTime(minTime)
+		maxNormalizedT := normalizeTime(minTime)
 	*/
 
 	scanRequest, err := hrpc.NewScanStr(ctx, c.table, hrpc.Filters(prefixRowKeyFilter))
@@ -141,18 +143,18 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minX, maxX, minY, maxY floa
 		}
 		rowCountHBaseReturned++
 		// TODO: remove these condition stmts after filter implemented
-		if crime.Longitude < minX || crime.Longitude > maxX || crime.Latitude < minY || crime.Latitude > maxY {
+		if crime.Longitude < minLongitude || crime.Longitude > maxLongitude || crime.Latitude < minLaitude || crime.Latitude > maxLaitude {
 			continue
 		}
 		rowCountCorrect++
-		if crime.Time < minT || crime.Time > maxT {
+		if crime.Time < minTime || crime.Time > maxTime {
 			continue
 		}
 		// fmt.Printf("%v\n", *crime)
 		crimes = append(crimes, crime)
 	}
-	fmt.Printf("DEBUG: query-prefix length %v out of 12, prefix-match hit rate %v%%\n",
-		len(prefixRowKey), 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
+	fmt.Printf("DEBUG: query-prefix length %v out of 12, prefix-match hit rate %.2f%% out of %v total returned records\n",
+		len(prefixRowKey), 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned), len(crimes))
 	return crimes, nil
 }
 
