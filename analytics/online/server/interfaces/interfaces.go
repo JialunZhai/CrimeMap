@@ -10,7 +10,6 @@ import (
 type Config struct {
 	Database struct {
 		Address   string
-		Namespace string
 		Table     string
 	}
 	GRPC struct {

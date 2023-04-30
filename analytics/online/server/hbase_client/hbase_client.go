@@ -33,10 +33,10 @@ const (
 
 func Register(env env_interface.Env) error {
 	config := env.GetConfig()
-	if config == nil || config.Database.Address == "" || config.Database.Namespace == "" || config.Database.Table == "" {
+	if config == nil || config.Database.Address == "" || config.Database.Table == "" {
 		return errors.New("HBase client not configured")
 	}
-	c, err := NewHBaseClient(env, config.Database.Address, config.Database.Namespace, config.Database.Table)
+	c, err := NewHBaseClient(env, config.Database.Address, config.Database.Table)
 	if err != nil {
 		return err
 	}
@@ -44,29 +44,49 @@ func Register(env env_interface.Env) error {
 	return nil
 }
 
-func NewHBaseClient(env env_interface.Env, zkquorum, namespace, table string) (*HBaseClient, error) {
+func NewHBaseClient(env env_interface.Env, zkquorum, table string) (*HBaseClient, error) {
+	fmt.Printf("table name `%v`", table)
 	client := gohbase.NewClient(zkquorum)
 	return &HBaseClient{
 		env:    env,
 		client: client,
-		table:  fmt.Sprintf("%s:%s", namespace, table),
+		table:  table,
 	}, nil
 }
 
 func (c *HBaseClient) Conn(ctx context.Context) error {
 	/*
-		// TODO: move the table and rowKey into config
-		getRequest, err := hrpc.NewGetStr(ctx, "group4:test", "dr5rugb9rwjj1970-01-20T05:54:52")
-		if err != nil {
-			return fmt.Errorf("hrpc error: %v\n", err)
+		fmt.Println("--------- Scan test begin ----------")
+		pFilter := filter.NewPrefixFilter([]byte(""))
+		rangeColTFilter := filter.NewColumnRangeFilter([]byte("1970-01-19T04:12:06"), []byte("1970-01-20T02:26:25"), true, true)
+		_ = rangeColTFilter
+		scanRequest, err := hrpc.NewScanStr(ctx, c.table,
+			hrpc.Filters(pFilter))
+		scanRsp := c.client.Scan(scanRequest)
+		var result *hrpc.Result
+		for {
+			result, err = scanRsp.Next()
+			if err != nil {
+				fmt.Printf("Scan error: %v\n", err)
+				break
+			}
+			fmt.Printf("%v\n", result)
 		}
-		getRsp, err := c.client.Get(getRequest)
-		if err != nil {
-			return fmt.Errorf("get HBase response failed: %v\n", err)
-		}
-		_ = getRsp
-		//fmt.Printf("DEBUG: HBase response: %v\n", getRsp)
+		fmt.Println("--------- Scan test end ----------")
+		/*
+			// TODO: move the table and rowKey into config
+			getRequest, err := hrpc.NewGetStr(ctx, "group4:test", "dr5rugb9rwjj1970-01-20T05:54:52")
+			if err != nil {
+				return fmt.Errorf("hrpc error: %v\n", err)
+			}
+			getRsp, err := c.client.Get(getRequest)
+			if err != nil {
+				return fmt.Errorf("get HBase response failed: %v\n", err)
+			}
+			_ = getRsp
+			//fmt.Printf("DEBUG: HBase response: %v\n", getRsp)
 	*/
+	// c.GetCrimes(ctx, -122.3592, -122.359, 47.5272, 47.5274, 1513799100, 1593799300)
 	return nil
 }
 
@@ -78,29 +98,29 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minX, maxX, minY, maxY floa
 	prefixRowKey := longestCommonPrefix(minHash, maxHash)
 	prefixRowKeyFilter := filter.NewPrefixFilter([]byte(prefixRowKey))
 
-	minNormalizedX := normalizeCoordinate(minX, -180.0)
-	maxNormalizedX := normalizeCoordinate(maxX, -180.0)
-	rangeColXFilter := filter.NewColumnRangeFilter([]byte(minNormalizedX), []byte(maxNormalizedX), true, true)
+	/*
+		minNormalizedX := normalizeCoordinate(minX, -180.0)
+		maxNormalizedX := normalizeCoordinate(maxX, -180.0)
 
-	minNormalizedY := normalizeCoordinate(minY, -90.0)
-	maxNormalizedY := normalizeCoordinate(maxY, -90.0)
-	rangeColYFilter := filter.NewColumnRangeFilter([]byte(minNormalizedY), []byte(maxNormalizedY), true, true)
+		minNormalizedY := normalizeCoordinate(minY, -90.0)
+		maxNormalizedY := normalizeCoordinate(maxY, -90.0)
 
-	minNormalizedT := normalizeTime(minT)
-	maxNormalizedT := normalizeTime(maxT)
-	rangeColTFilter := filter.NewColumnRangeFilter([]byte(minNormalizedT), []byte(maxNormalizedT), true, true)
+		minNormalizedT := normalizeTime(minT)
+		maxNormalizedT := normalizeTime(maxT)
+	*/
 
-	scanRequest, err := hrpc.NewScanStr(ctx, "group4_rbda_nyu_edu:crimes",
-		hrpc.Filters(prefixRowKeyFilter), hrpc.Filters(rangeColXFilter), hrpc.Filters(rangeColYFilter), hrpc.Filters(rangeColTFilter))
+	scanRequest, err := hrpc.NewScanStr(ctx, c.table, hrpc.Filters(prefixRowKeyFilter))
 	scanRsp := c.client.Scan(scanRequest)
 
+	rowCountHBaseReturned := 0
+	rowCountCorrect := 0
 	var result *hrpc.Result
 	for {
 		result, err = scanRsp.Next()
 		if err != nil {
 			break
 		}
-		var crime interfaces.Crime
+		crime := &interfaces.Crime{}
 		for _, cell := range result.Cells {
 			switch string(cell.Qualifier) {
 			case longitudeQualifier:
@@ -114,16 +134,22 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minX, maxX, minY, maxY floa
 			default:
 				// unexpeced qualifier: just skip it to fit changes in schema
 			}
-			// TODO: remove these stmts
-			// --- begin ---
-			if crime.Longitude < minX || crime.Longitude > maxX || crime.Latitude < minY || crime.Latitude > maxY || crime.Time < minT || crime.Time > maxT {
-				continue
-			}
-			// --- end ---
-			crimes = append(crimes, &crime)
 		}
+		rowCountHBaseReturned++
+		// TODO: remove these condition stmts after filter implemented
+		if crime.Longitude < minX || crime.Longitude > maxX || crime.Latitude < minY || crime.Latitude > maxY {
+			continue
+		}
+		rowCountCorrect++
+		if crime.Time < minT || crime.Time > maxT {
+			continue
+		}
+		// fmt.Printf("%v\n", *crime)
+		crimes = append(crimes, crime)
+		crime = &interfaces.Crime{}
 	}
-
+	fmt.Printf("DEBUG: query-prefix length %v out of 12, query precision %v%%\n",
+		len(prefixRowKey), 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
 	return crimes, nil
 }
 
@@ -135,7 +161,7 @@ func (c *HBaseClient) Close() error {
 func longestCommonPrefix(s1, s2 string) string {
 	for i := 0; i < len(s1) && i < len(s2); i++ {
 		if s1[i] != s2[i] {
-			return s1[:i-1]
+			return s1[:i]
 		}
 	}
 	if len(s1) < len(s2) {
@@ -160,14 +186,14 @@ func normalizeCoordinate(value, minValue float64) string {
 	return prefixStr + suffixStr
 }
 
-func normalizeTime(timestamp int64) string {
-	return time.Unix(timestamp, 0).Format(yyyyMMddTHHmmss)
-}
-
 func denormalizeCoordinate(normalizedStr string, minValue float64) float64 {
 	// TODO: Don't ignore this error
 	value, _ := strconv.ParseFloat(normalizedStr, 64)
 	return value/1e6 + minValue
+}
+
+func normalizeTime(timestamp int64) string {
+	return time.Unix(timestamp, 0).Format(yyyyMMddTHHmmss)
 }
 
 func denormalizeTime(normalizeTime string) int64 {

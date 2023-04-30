@@ -2,18 +2,12 @@ import ch.hsr.geohash.GeoHash;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class HBaseCrimeMapper<K> extends Mapper<LongWritable, Text, K, Put> {
-  static final byte[] EVENT_COLUMNFAMILY = Bytes.toBytes("e");
-  static final byte[] LONGITUDE_QUALIFIER = Bytes.toBytes("x");
-  static final byte[] LATITUDE_QUALIFIER = Bytes.toBytes("y");
-  static final byte[] TIME_QUALIFIER = Bytes.toBytes("t");
-  static final byte[] DESCRIPTION_QUALIFIER = Bytes.toBytes("d");
+public class DataMigrationMapper 
+    extends Mapper<LongWritable, Text, NullWritable, Text> {
 
   private String normalize(double value, double minValue) {
     double posValue = value - minValue;
@@ -79,12 +73,7 @@ public class HBaseCrimeMapper<K> extends Mapper<LongWritable, Text, K, Put> {
       return;
     }
 
-    Put p = new Put(Bytes.toBytes(rowKey));
-
-    p.addColumn(EVENT_COLUMNFAMILY, LONGITUDE_QUALIFIER, Bytes.toBytes(normalizedLongitude));
-    p.addColumn(EVENT_COLUMNFAMILY, LATITUDE_QUALIFIER, Bytes.toBytes(normalizedLatitude));
-    p.addColumn(EVENT_COLUMNFAMILY, TIME_QUALIFIER, Bytes.toBytes(time));
-    p.addColumn(EVENT_COLUMNFAMILY, DESCRIPTION_QUALIFIER, Bytes.toBytes(description));
-    context.write(null, p);
+    String record = String.format("%s\t%s\t%s\t%s\t%s", rowKey, normalizedLongitude, normalizedLatitude, time, description);
+    context.write(NullWritable.get(), new Text(record));
   }
 }
