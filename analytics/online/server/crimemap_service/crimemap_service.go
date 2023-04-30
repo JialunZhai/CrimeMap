@@ -33,14 +33,24 @@ func NewCrimeMapService(env env_interface.Env) (*CrimeMapService, error) {
 }
 
 func (s *CrimeMapService) GetCrimes(ctx context.Context, req *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error) {
+	if req == nil {
+		return nil, fmt.Errorf("crimemap service warnning: empty gRPC request for GetCrimes")
+	}
+	if req.LongitudeMin > req.LongitudeMax || req.LatitudeMin > req.LatitudeMax || req.TimeMin > req.TimeMax {
+		return nil, fmt.Errorf("crimemap service warnning: bad gRPC arguments for GetCrimes")
+	}
+
 	rsp := cmspb.GetCrimesResponse{
-		Crimes: make([]*cmspb.Crime, 64),
+		Crimes: make([]*cmspb.Crime, 0),
 	}
 	crimes, err := s.env.GetDatabaseClient().GetCrimes(ctx, req.LongitudeMin, req.LongitudeMax, req.LatitudeMin, req.LatitudeMax, req.TimeMin, req.TimeMax)
 	if err != nil {
 		return nil, err
 	}
 	for _, crime := range crimes {
+		if crime == nil {
+			return nil, fmt.Errorf("crimemap service internal error: database client returned result contains nil pointer")
+		}
 		rsp.Crimes = append(rsp.Crimes, &cmspb.Crime{
 			Time:        crime.Time,
 			Longitude:   crime.Longitude,

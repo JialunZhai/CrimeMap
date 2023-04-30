@@ -91,7 +91,11 @@ func (c *HBaseClient) Conn(ctx context.Context) error {
 }
 
 func (c *HBaseClient) GetCrimes(ctx context.Context, minX, maxX, minY, maxY float64, minT, maxT int64) ([]*interfaces.Crime, error) {
-	crimes := make([]*interfaces.Crime, 64)
+	if minX > maxX || minY > maxY || minT > maxT {
+		return nil, fmt.Errorf("HBase client warnning: bad query arguments for GetCrimes")
+	}
+
+	crimes := make([]*interfaces.Crime, 0)
 
 	minHash := geohash.Encode(minY, minX, maxPrecision)
 	maxHash := geohash.Encode(maxY, maxX, maxPrecision)
@@ -146,9 +150,8 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minX, maxX, minY, maxY floa
 		}
 		// fmt.Printf("%v\n", *crime)
 		crimes = append(crimes, crime)
-		crime = &interfaces.Crime{}
 	}
-	fmt.Printf("DEBUG: query-prefix length %v out of 12, query precision %v%%\n",
+	fmt.Printf("DEBUG: query-prefix length %v out of 12, prefix-match hit rate %v%%\n",
 		len(prefixRowKey), 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
 	return crimes, nil
 }
