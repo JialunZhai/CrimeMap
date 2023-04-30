@@ -9,7 +9,9 @@ import (
 
 type Config struct {
 	Database struct {
-		Address string
+		Address   string
+		Namespace string
+		Table     string
 	}
 	GRPC struct {
 		Address string
@@ -25,7 +27,7 @@ type Config struct {
 
 type Crime struct {
 	Longitude   float64
-	Laitude     float64
+	Latitude    float64
 	Time        int64
 	Description string
 }
@@ -52,6 +54,6 @@ type CrimeMapService interface {
 
 type DatabaseClient interface {
 	Conn(ctx context.Context) error
-	GetCrimes(ctx context.Context, minX float64, maxX float64, minY float64, maxY float64) ([]*Crime, error)
+	GetCrimes(ctx context.Context, minX, maxX, minY, maxY float64, minT, maxT int64) ([]*Crime, error)
 	Close() error
 }

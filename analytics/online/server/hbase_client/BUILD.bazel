@@ -9,6 +9,7 @@ go_library(
         "//analytics/online/server/enviroment",
         "//analytics/online/server/interfaces",
         "//vendor/github.com/tsuna/gohbase",
+        "//vendor/github.com/tsuna/gohbase/filter",
         "//vendor/github.com/tsuna/gohbase/hrpc",
         "@com_github_pierrre_geohash//:geohash",
     ],

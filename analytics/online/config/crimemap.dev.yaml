@@ -1,5 +1,7 @@
 database:
   address: localhost
+  namespace: group4_rbda_nyu_edu
+  table: crimes
 grpc:
   address: :8079
 grpcweb:

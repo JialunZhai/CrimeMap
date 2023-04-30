@@ -32,7 +32,21 @@ func NewCrimeMapService(env env_interface.Env) (*CrimeMapService, error) {
 	}, nil
 }
 
-func (s *CrimeMapService) GetCrimes(ctx context.Context, _ *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error) {
-	// TODO: implement this with env.GetDatabaseClient().GetCrimes
-	return &cmspb.GetCrimesResponse{}, nil
+func (s *CrimeMapService) GetCrimes(ctx context.Context, req *cmspb.GetCrimesRequest) (*cmspb.GetCrimesResponse, error) {
+	rsp := cmspb.GetCrimesResponse{
+		Crimes: make([]*cmspb.Crime, 64),
+	}
+	crimes, err := s.env.GetDatabaseClient().GetCrimes(ctx, req.LongitudeMin, req.LongitudeMax, req.LatitudeMin, req.LatitudeMax, req.TimeMin, req.TimeMax)
+	if err != nil {
+		return nil, err
+	}
+	for _, crime := range crimes {
+		rsp.Crimes = append(rsp.Crimes, &cmspb.Crime{
+			Time:        crime.Time,
+			Longitude:   crime.Longitude,
+			Latitude:    crime.Latitude,
+			Description: crime.Description,
+		})
+	}
+	return &rsp, nil
 }
