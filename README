@@ -85,3 +85,9 @@ ping nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal
 gcloud compute ssh nyu-dataproc-m --project hpc-dataproc-19b8 --zone us-central1-f -- -N -L 2181:localhost:2181
 gcloud compute ssh nyu-dataproc-m --project hpc-dataproc-19b8 --zone us-central1-f -- -N -L 16020:nyu-dataproc-w-0.c.hpc-dataproc-19b8.internal:16020
 gcloud compute ssh nyu-dataproc-m --project hpc-dataproc-19b8 --zone us-central1-f -- -N -L 16021:nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal:16020
+
+
+# trouble shooting
+## 1.If compile failed due to protobuf, it's because the protobuf on your system is not compatible with the version required by this program.
+##   Thus you need to disable the protobuf on your system by renaming its header file directory. Then our build system cannot find protobuf on
+##   your system, and it will download the correct version from remote repo specified by http_archieve rules.

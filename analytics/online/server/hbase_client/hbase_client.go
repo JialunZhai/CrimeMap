@@ -24,6 +24,7 @@ type HBaseClient struct {
 
 const (
 	maxPrecision         = 12
+	eventFamily          = "e"
 	longitudeQualifier   = "x"
 	laitudeQualifier     = "y"
 	timeQualifier        = "t"
@@ -55,38 +56,7 @@ func NewHBaseClient(env env_interface.Env, zkquorum, table string) (*HBaseClient
 }
 
 func (c *HBaseClient) Conn(ctx context.Context) error {
-	/*
-		fmt.Println("--------- Scan test begin ----------")
-		pFilter := filter.NewPrefixFilter([]byte(""))
-		rangeColTFilter := filter.NewColumnRangeFilter([]byte("1970-01-19T04:12:06"), []byte("1970-01-20T02:26:25"), true, true)
-		_ = rangeColTFilter
-		scanRequest, err := hrpc.NewScanStr(ctx, c.table,
-			hrpc.Filters(pFilter))
-		scanRsp := c.client.Scan(scanRequest)
-		var result *hrpc.Result
-		for {
-			result, err = scanRsp.Next()
-			if err != nil {
-				fmt.Printf("Scan error: %v\n", err)
-				break
-			}
-			fmt.Printf("%v\n", result)
-		}
-		fmt.Println("--------- Scan test end ----------")
-		/*
-			// TODO: move the table and rowKey into config
-			getRequest, err := hrpc.NewGetStr(ctx, "group4:test", "dr5rugb9rwjj1970-01-20T05:54:52")
-			if err != nil {
-				return fmt.Errorf("hrpc error: %v\n", err)
-			}
-			getRsp, err := c.client.Get(getRequest)
-			if err != nil {
-				return fmt.Errorf("get HBase response failed: %v\n", err)
-			}
-			_ = getRsp
-			//fmt.Printf("DEBUG: HBase response: %v\n", getRsp)
-	*/
-	// c.GetCrimes(ctx, -122.3592, -122.359, 47.5272, 47.5274, 1513799100, 1593799300)
+	// c.GetCrimes(ctx, -122.3592, -122.059, 47.5272, 47.5274, 1513799100, 1593799300)
 	return nil
 }
 
@@ -104,18 +74,31 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 	prefixRowKey := longestCommonPrefix(minHash, maxHash)
 	prefixRowKeyFilter := filter.NewPrefixFilter([]byte(prefixRowKey))
 
-	/*
-		minNormalizedX := normalizeCoordinate(minLongitude, -180.0)
-		maxNormalizedX := normalizeCoordinate(maxLongitude, -180.0)
+	minNormalizedX := normalizeCoordinate(minLongitude, -180.0)
+	geqMinXFilter := filter.NewSingleColumnValueFilter([]byte(eventFamily), []byte(longitudeQualifier),
+		filter.GreaterOrEqual, filter.NewBinaryComparator(filter.NewByteArrayComparable([]byte(minNormalizedX))), true, true)
+	maxNormalizedX := normalizeCoordinate(maxLongitude, -180.0)
+	leqMaxXFilter := filter.NewSingleColumnValueFilter([]byte(eventFamily), []byte(longitudeQualifier),
+		filter.LessOrEqual, filter.NewBinaryComparator(filter.NewByteArrayComparable([]byte(maxNormalizedX))), true, true)
 
-		minNormalizedY := normalizeCoordinate(minLaitude, -90.0)
-		maxNormalizedY := normalizeCoordinate(maxLaitude, -90.0)
+	minNormalizedY := normalizeCoordinate(minLaitude, -90.0)
+	geqMinYFilter := filter.NewSingleColumnValueFilter([]byte(eventFamily), []byte(laitudeQualifier),
+		filter.GreaterOrEqual, filter.NewBinaryComparator(filter.NewByteArrayComparable([]byte(minNormalizedY))), true, true)
+	maxNormalizedY := normalizeCoordinate(maxLaitude, -90.0)
+	leqMaxYFilter := filter.NewSingleColumnValueFilter([]byte(eventFamily), []byte(laitudeQualifier),
+		filter.LessOrEqual, filter.NewBinaryComparator(filter.NewByteArrayComparable([]byte(maxNormalizedY))), true, true)
 
-		minNormalizedT := normalizeTime(minTime)
-		maxNormalizedT := normalizeTime(maxTime)
-	*/
+	minNormalizedT := normalizeTime(minTime)
+	geqMinTFilter := filter.NewSingleColumnValueFilter([]byte(eventFamily), []byte(timeQualifier),
+		filter.GreaterOrEqual, filter.NewBinaryComparator(filter.NewByteArrayComparable([]byte(minNormalizedT))), true, true)
+	maxNormalizedT := normalizeTime(maxTime)
+	leqMaxTFilter := filter.NewSingleColumnValueFilter([]byte(eventFamily), []byte(timeQualifier),
+		filter.LessOrEqual, filter.NewBinaryComparator(filter.NewByteArrayComparable([]byte(maxNormalizedT))), true, true)
 
-	scanRequest, err := hrpc.NewScanStr(ctx, c.table, hrpc.Filters(prefixRowKeyFilter))
+	filterList := filter.NewList(filter.MustPassAll, prefixRowKeyFilter,
+		geqMinTFilter, leqMaxTFilter, geqMinXFilter, leqMaxXFilter, geqMinYFilter, leqMaxYFilter)
+	scanRequest, err := hrpc.NewScanStr(ctx, c.table,
+		hrpc.Filters(filterList))
 	scanRsp := c.client.Scan(scanRequest)
 
 	rowCountHBaseReturned := 0
@@ -128,6 +111,9 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 		}
 		crime := &interfaces.Crime{}
 		for _, cell := range result.Cells {
+			if string(cell.Family) != eventFamily {
+				continue
+			}
 			switch string(cell.Qualifier) {
 			case longitudeQualifier:
 				crime.Longitude = denormalizeCoordinate(string(cell.Value), -180.0)
@@ -142,19 +128,25 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 			}
 		}
 		rowCountHBaseReturned++
-		// TODO: remove these condition stmts after filter implemented
+		// TODO: remove these condition stmts after filter fully tested
 		if crime.Longitude < minLongitude || crime.Longitude > maxLongitude || crime.Latitude < minLaitude || crime.Latitude > maxLaitude {
 			continue
 		}
-		rowCountCorrect++
+
 		if crime.Time < minTime || crime.Time > maxTime {
 			continue
 		}
-		// fmt.Printf("%v\n", *crime)
+		rowCountCorrect++
+		//fmt.Printf("%v\n", *crime)
 		crimes = append(crimes, crime)
 	}
-	fmt.Printf("DEBUG: query-prefix length %v out of 12, prefix-match hit rate %.2f%% out of %v total returned records\n",
-		len(prefixRowKey), 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned), len(crimes))
+	if rowCountCorrect != rowCountHBaseReturned {
+		fmt.Printf("WARNNING: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions\n",
+			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
+	} else {
+		fmt.Printf("DEBUG: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions\n",
+			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
+	}
 	return crimes, nil
 }
 
