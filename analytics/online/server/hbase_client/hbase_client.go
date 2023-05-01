@@ -66,7 +66,7 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 	if minLongitude > maxLongitude || minLaitude > maxLaitude || minTime > maxTime {
 		return nil, fmt.Errorf("HBase client warnning: bad query arguments for GetCrimes")
 	}
-
+	startTime := time.Now()
 	crimes := make([]*interfaces.Crime, 0)
 
 	minHash := geohash.Encode(minLaitude, minLongitude, maxPrecision)
@@ -140,12 +140,13 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 		//fmt.Printf("%v\n", *crime)
 		crimes = append(crimes, crime)
 	}
+	diff := time.Now().Sub(startTime)
 	if rowCountCorrect != rowCountHBaseReturned {
-		fmt.Printf("WARNNING: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions\n",
-			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
+		fmt.Printf("WARNNING: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions, query costs %v seconds\n",
+			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned), diff.Seconds())
 	} else {
-		fmt.Printf("DEBUG: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions\n",
-			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned))
+		fmt.Printf("DEBUG: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions, query costs %v seconds\n",
+			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned), diff.Seconds())
 	}
 	return crimes, nil
 }

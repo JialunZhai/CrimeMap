@@ -7,7 +7,7 @@ if __name__ == "__main__":
   now = datetime.now()
   current_time = now.strftime("%H%M%S")
   with open("log-{}-{}-ImportTsv.txt".format(today, current_time), "x") as logfile: 
-    table = "group4_rbda_nyu_edu:crimes"
+    table = "group04_rbda_nyu_edu:crimes"
     columns = ["x", "y", "t", "d"]
     for k, arg in enumerate(sys.argv):
       if k == 0:

@@ -10,3 +10,6 @@
 
 # import data to HBase 
   python ImportTsv.py ${INPUT_DATA_TSV} | hbase shell >/dev/null
+
+# or 
+  hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.columns=HBASE_ROW_KEY,e:x,e:y,e:t,e:d group04_rbda_nyu_edu:crimes ${INPUT_DATA_TSV}
