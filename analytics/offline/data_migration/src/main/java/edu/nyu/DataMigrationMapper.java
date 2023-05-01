@@ -3,10 +3,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class DataMigrationMapper 
+public class DataMigrationMapper
     extends Mapper<LongWritable, Text, NullWritable, Text> {
 
   private String normalize(double value, double minValue) {
@@ -73,7 +74,8 @@ public class DataMigrationMapper
       return;
     }
 
-    String record = String.format("%s\t%s\t%s\t%s\t%s", rowKey, normalizedLongitude, normalizedLatitude, time, description);
+    String record = String.format("%s\t%s\t%s\t%s\t%s", rowKey, normalizedLongitude, normalizedLatitude, time,
+        description);
     context.write(NullWritable.get(), new Text(record));
   }
 }

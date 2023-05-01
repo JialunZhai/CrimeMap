@@ -3,6 +3,8 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 
 public class DataMigration {
 
@@ -16,10 +18,10 @@ public class DataMigration {
     job.setJarByClass(DataMigration.class);
     job.setJobName("Data Cleaning");
 
-    FileOutputFormat.setOutputPath(job, new Path(args[0]));
     for (int i = 1; i < args.length; i++) {
-
+      MultipleInputs.addInputPath(job, new Path(args[i]), TextInputFormat.class, DataMigrationMapper.class);
     }
+    FileOutputFormat.setOutputPath(job, new Path(args[0]));
 
     job.setReducerClass(DataMigrationReducer.class);
 
