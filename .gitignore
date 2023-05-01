@@ -5,3 +5,4 @@ analytics/offline/data_migration/*.jar
 bazel-*
 dist
 node_modules
+tmp
