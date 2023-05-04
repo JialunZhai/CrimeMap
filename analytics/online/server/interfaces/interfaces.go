@@ -8,6 +8,9 @@ import (
 )
 
 type Config struct {
+	Prometheus struct {
+		Address string
+	}
 	Database struct {
 		Address string
 		Table   string
@@ -55,4 +58,9 @@ type DatabaseClient interface {
 	Conn(ctx context.Context) error
 	GetCrimes(ctx context.Context, minLongitude, maxLongitude, minLaitude, maxLaitude float64, minTime, maxTime int64) ([]*Crime, error)
 	Close() error
+}
+
+type PrometheusMonitor interface {
+	Run() error
+	Shutdown(ctx context.Context) error
 }

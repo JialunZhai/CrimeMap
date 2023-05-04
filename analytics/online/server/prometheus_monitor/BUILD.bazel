@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "prometheus",
+    srcs = ["prometheus.go"],
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/server/prometheus",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//analytics/online/server/enviroment",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "@com_github_prometheus_client_golang//prometheus/promhttp",
+    ],
+)
+
+go_library(
+    name = "prometheus_monitor",
+    srcs = ["prometheus_monitor.go"],
+    importpath = "github.com/jialunzhai/crimemap/analytics/online/server/prometheus_monitor",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//analytics/online/server/enviroment",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "@com_github_prometheus_client_golang//prometheus/promhttp",
+    ],
+)

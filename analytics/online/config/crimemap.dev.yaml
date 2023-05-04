@@ -1,3 +1,5 @@
+prometheus:
+  address: :8090
 database:
   address: localhost
   table: group04_rbda_nyu_edu:crimes

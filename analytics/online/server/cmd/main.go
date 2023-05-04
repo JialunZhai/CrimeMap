@@ -17,20 +17,23 @@ import (
 	"github.com/jialunzhai/crimemap/analytics/online/server/hbase_client"
 	"github.com/jialunzhai/crimemap/analytics/online/server/http_server"
 	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
+	"github.com/jialunzhai/crimemap/analytics/online/server/prometheus_monitor"
 	real_env "github.com/jialunzhai/crimemap/analytics/online/server/real_enviroment"
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v3"
 )
 
 func main() {
+	// prepare context and enviroment
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	env := real_env.NewRealEnv()
 
+	// load config
 	if len(os.Args) != 2 {
 		log.Fatalf("Usage: cmd ${PATH_TO_CONFIG}")
 	}
@@ -42,6 +45,12 @@ func main() {
 		log.Fatalf("Load config failed with error: `empty config file`\n")
 	}
 
+	// init each components in order
+	if config.Prometheus.Address != "" {
+		if err := prometheus_monitor.Register(env); err != nil {
+			log.Fatalf("PrometheusMonitor.Register failed with error: `%v`\n", err)
+		}
+	}
 	if err := hbase_client.Register(env); err != nil {
 		log.Fatalf("HBaseClient.Register failed with error: `%v`\n", err)
 	}
@@ -66,6 +75,18 @@ func main() {
 
 	g, ctx := errgroup.WithContext(ctx)
 
+	// start each components in order
+	if env.GetPrometheusMonitor() != nil {
+		g.Go(func() error {
+			err := env.GetPrometheusMonitor().Run()
+			if err != http.ErrServerClosed {
+				log.Printf("PrometheusMonitor shutdowned with error: `%v`\n", err)
+				return err
+			}
+			log.Printf("PrometheusMonitor gracefully shutdowned\n")
+			return err
+		})
+	}
 	if env.GetDatabaseClient() != nil {
 		log.Println("Try to connect to database with timeout...")
 		ctxWithTimeout, timeout := context.WithTimeout(ctx, time.Duration(time.Second*4))
@@ -113,30 +134,34 @@ func main() {
 	// wait for signals
 	select {
 	case sig := <-sigs:
-		// received signal, cancel context in the reverse order
+		// received signal, break and cancel context in the reverse order
 		log.Printf("Received signal: `%v`\n", sig)
-		if env.GetHTTPServer() != nil {
-			env.GetHTTPServer().Shutdown(ctx)
-		}
-		if env.GetGRPCWebServer() != nil {
-			env.GetGRPCWebServer().Shutdown(ctx)
-		}
-		if env.GetGRPCServer() != nil {
-			env.GetGRPCServer().Shutdown()
-		}
-		cancel()
 		break
 	case <-ctx.Done():
 		// context cancelled, all goroutines have returned
 		break
 	}
 
+	// clean up
+	if env.GetHTTPServer() != nil {
+		env.GetHTTPServer().Shutdown(ctx)
+	}
+	if env.GetGRPCWebServer() != nil {
+		env.GetGRPCWebServer().Shutdown(ctx)
+	}
+	if env.GetGRPCServer() != nil {
+		env.GetGRPCServer().Shutdown()
+	}
 	if env.GetDatabaseClient() != nil {
 		if err := env.GetDatabaseClient().Close(); err != nil {
 			log.Fatalf("DatabaseClient closed with error: `%v`\n", err)
 		}
 		log.Printf("DatabaseClient gracefully closed\n")
 	}
+	if env.GetPrometheusMonitor() != nil {
+		env.GetPrometheusMonitor().Shutdown(ctx)
+	}
+	cancel()
 
 	// wait for all go-routines in errgroup to return
 	if err := g.Wait(); err != nil {

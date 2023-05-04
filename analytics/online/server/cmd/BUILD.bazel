@@ -17,6 +17,7 @@ go_library(
         "//analytics/online/server/hbase_client",
         "//analytics/online/server/http_server",
         "//analytics/online/server/interfaces",
+        "//analytics/online/server/prometheus_monitor",
         "//analytics/online/server/real_enviroment",
         "@in_gopkg_yaml_v3//:yaml_v3",
         "@org_golang_x_sync//errgroup",

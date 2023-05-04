@@ -5,12 +5,13 @@ import (
 )
 
 type RealEnv struct {
-	config          *interfaces.Config
-	httpServer      interfaces.HTTPServer
-	grpcServer      interfaces.GRPCServer
-	grpcWebServer   interfaces.GRPCWebServer
-	crimemapService interfaces.CrimeMapService
-	databaseClient  interfaces.DatabaseClient
+	config            *interfaces.Config
+	httpServer        interfaces.HTTPServer
+	grpcServer        interfaces.GRPCServer
+	grpcWebServer     interfaces.GRPCWebServer
+	crimemapService   interfaces.CrimeMapService
+	databaseClient    interfaces.DatabaseClient
+	prometheusMonitor interfaces.PrometheusMonitor
 }
 
 func NewRealEnv() *RealEnv {
@@ -62,4 +63,12 @@ func (r *RealEnv) GetDatabaseClient() interfaces.DatabaseClient {
 
 func (r *RealEnv) SetDatabaseClient(s interfaces.DatabaseClient) {
 	r.databaseClient = s
+}
+
+func (r *RealEnv) GetPrometheusMonitor() interfaces.PrometheusMonitor {
+	return r.prometheusMonitor
+}
+
+func (r *RealEnv) SetPrometheusMonitor(m interfaces.PrometheusMonitor) {
+	r.prometheusMonitor = m
 }

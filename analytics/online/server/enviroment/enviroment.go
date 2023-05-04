@@ -17,4 +17,6 @@ type Env interface {
 	SetCrimeMapService(interfaces.CrimeMapService)
 	GetDatabaseClient() interfaces.DatabaseClient
 	SetDatabaseClient(interfaces.DatabaseClient)
+	GetPrometheusMonitor() interfaces.PrometheusMonitor
+	SetPrometheusMonitor(interfaces.PrometheusMonitor)
 }

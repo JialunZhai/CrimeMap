@@ -46,7 +46,7 @@ func Register(env env_interface.Env) error {
 }
 
 func NewHBaseClient(env env_interface.Env, zkquorum, table string) (*HBaseClient, error) {
-	fmt.Printf("table name `%v`", table)
+	fmt.Printf("table name `%v`\n", table)
 	client := gohbase.NewClient(zkquorum)
 	return &HBaseClient{
 		env:    env,
