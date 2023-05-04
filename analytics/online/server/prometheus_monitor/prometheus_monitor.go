@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
+	// use effect: register counters with the global registry of prometheus
+	_ "github.com/jialunzhai/crimemap/analytics/online/server/metrics"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
@@ -16,11 +16,6 @@ type PrometheusMonitor struct {
 	env    env_interface.Env
 	server *http.Server
 }
-
-var ErrorCounter = promauto.NewCounter(prometheus.CounterOpts{
-	Name: "error_counter",
-	Help: "The total number of errors occurred.",
-})
 
 func Register(env env_interface.Env) error {
 	config := env.GetConfig()

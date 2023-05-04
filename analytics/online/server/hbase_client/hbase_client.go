@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
 	"github.com/jialunzhai/crimemap/analytics/online/server/interfaces"
+	"github.com/jialunzhai/crimemap/analytics/online/server/metrics"
 	"github.com/pierrre/geohash"
 	"github.com/tsuna/gohbase"
 	"github.com/tsuna/gohbase/filter"
@@ -185,8 +187,12 @@ func normalizeCoordinate(value, minValue float64) string {
 }
 
 func denormalizeCoordinate(normalizedStr string, minValue float64) float64 {
-	// TODO: Don't ignore this error
-	value, _ := strconv.ParseFloat(normalizedStr, 64)
+	value, err := strconv.ParseFloat(normalizedStr, 64)
+	if err != nil {
+		metrics.InvalidRowsCounter.Inc()
+		log.Printf("WARNING: parse `%v` to float64 failed with error: %v\n", normalizedStr, err)
+		return 0
+	}
 	return value/1e6 + minValue
 }
 
@@ -196,6 +202,11 @@ func normalizeTime(timestamp int64) string {
 
 func denormalizeTime(normalizeTime string) int64 {
 	// TODO: Don't ignore this error
-	date, _ := time.Parse(yyyyMMddTHHmmss, normalizeTime)
+	date, err := time.Parse(yyyyMMddTHHmmss, normalizeTime)
+	if err != nil {
+		metrics.InvalidRowsCounter.Inc()
+		log.Printf("WARNING: parse `%v` to date failed with error: %v\n", normalizeTime, err)
+		return 0
+	}
 	return date.Unix()
 }

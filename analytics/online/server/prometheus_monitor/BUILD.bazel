@@ -20,8 +20,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//analytics/online/server/enviroment",
-        "@com_github_prometheus_client_golang//prometheus",
-        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "//analytics/online/server/metrics",
         "@com_github_prometheus_client_golang//prometheus/promhttp",
     ],
 )

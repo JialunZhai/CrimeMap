@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//analytics/online/server/enviroment",
         "//analytics/online/server/interfaces",
+        "//analytics/online/server/metrics",
         "//vendor/github.com/tsuna/gohbase",
         "//vendor/github.com/tsuna/gohbase/filter",
         "//vendor/github.com/tsuna/gohbase/hrpc",
