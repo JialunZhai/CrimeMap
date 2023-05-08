@@ -25,8 +25,8 @@ export class AppComponent {
 
   start_date: string;
   end_date: string;
-  startTimestamp = 1514764800;
-  endTimestamp = 2000000000;
+  startTimestamp = 946702800; // 2000-01-01T00:00:00
+  endTimestamp = 1684295999; // 2023-05-16T23:59:59
 
   topLatBound: number;
   botLatBound: number;
