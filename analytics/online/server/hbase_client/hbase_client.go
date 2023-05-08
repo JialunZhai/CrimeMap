@@ -58,7 +58,12 @@ func NewHBaseClient(env env_interface.Env, zkquorum, table string) (*HBaseClient
 }
 
 func (c *HBaseClient) Conn(ctx context.Context) error {
-	// c.GetCrimes(ctx, -122.3592, -122.059, 47.5272, 47.5274, 1513799100, 1593799300)
+	if _, err := c.GetCrimes(ctx, -179.999999, -179.999999, -89.999999, -89.999999, 0, 0); err != nil {
+		return err
+	}
+	if _, err := c.GetCrimes(ctx, 179.999999, 179.999999, 89.999999, 89.999999, 2000000000, 2000000000); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -102,6 +107,7 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 	scanRequest, err := hrpc.NewScanStr(ctx, c.table,
 		hrpc.Filters(filterList))
 	scanRsp := c.client.Scan(scanRequest)
+	metrics.ScanRequestsCounter.Inc()
 
 	rowCountHBaseReturned := 0
 	rowCountCorrect := 0
@@ -130,7 +136,6 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 			}
 		}
 		rowCountHBaseReturned++
-		// TODO: remove these condition stmts after filter fully tested
 		if crime.Longitude < minLongitude || crime.Longitude > maxLongitude || crime.Latitude < minLaitude || crime.Latitude > maxLaitude {
 			continue
 		}
@@ -139,7 +144,6 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 			continue
 		}
 		rowCountCorrect++
-		//fmt.Printf("%v\n", *crime)
 		crimes = append(crimes, crime)
 	}
 	diff := time.Now().Sub(startTime)
@@ -150,6 +154,8 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 		fmt.Printf("DEBUG: query-prefix length %v out of 12, %v of %v namely %.2f%% the returned records fit the conditions, query costs %v seconds\n",
 			len(prefixRowKey), rowCountCorrect, rowCountHBaseReturned, 100*float64(rowCountCorrect)/float64(rowCountHBaseReturned), diff.Seconds())
 	}
+	metrics.ReturnedRowsCounter.Add(float64(rowCountHBaseReturned))
+	metrics.ScanRequestDurationSec.Observe(diff.Seconds())
 	return crimes, nil
 }
 
