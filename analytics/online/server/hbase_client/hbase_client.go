@@ -136,6 +136,7 @@ func (c *HBaseClient) GetCrimes(ctx context.Context, minLongitude, maxLongitude,
 			}
 		}
 		rowCountHBaseReturned++
+		// double check the ranges
 		if crime.Longitude < minLongitude || crime.Longitude > maxLongitude || crime.Latitude < minLaitude || crime.Latitude > maxLaitude {
 			continue
 		}
@@ -207,7 +208,6 @@ func normalizeTime(timestamp int64) string {
 }
 
 func denormalizeTime(normalizeTime string) int64 {
-	// TODO: Don't ignore this error
 	date, err := time.Parse(yyyyMMddTHHmmss, normalizeTime)
 	if err != nil {
 		metrics.InvalidRowsCounter.Inc()

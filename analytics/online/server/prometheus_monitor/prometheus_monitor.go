@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	env_interface "github.com/jialunzhai/crimemap/analytics/online/server/enviroment"
-	// use effect: register counters with the global registry of prometheus
 	_ "github.com/jialunzhai/crimemap/analytics/online/server/metrics"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
