@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - args:
-        - /config/crimemap.release.yaml
-        image: ${IMAGE}
+        - analytics/online/config/crimemap.release.yaml
+        image: IMAGE_NAME
         name: crimemap
         ports:
         - containerPort: 8079
@@ -25,19 +25,6 @@ spec:
           protocol: TCP
         - containerPort: 8081
           protocol: TCP
-        volumeMounts:
-        - mountPath: /config/
-          name: configs
-          readOnly: true
-      volumes:
-      - name: configs
-        projected:
-          sources:
-          - configMap:
-              name: crimemap
-              items:
-              - key: crimemap.release.yaml
-                path: crimemap.release.yaml
 ---
 apiVersion: v1
 kind: Service
