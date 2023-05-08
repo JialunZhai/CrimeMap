@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crimemap
+  namespace: rbda
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: crimemap
+  template:
+    metadata:
+      labels:
+        app: crimemap
+    spec:
+      containers:
+      - args:
+        - /config/crimemap.release.yaml
+        image: ${IMAGE}
+        name: crimemap
+        ports:
+        - containerPort: 8079
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8081
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config/
+          name: configs
+          readOnly: true
+      volumes:
+      - name: configs
+        projected:
+          sources:
+          - configMap:
+              name: crimemap
+              items:
+              - key: crimemap.release.yaml
+                path: crimemap.release.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "8090"
+    prometheus.io/scrape: "true"
+  name: crimemap
+  namespace: rbda
+spec:
+  ports:
+  - port: 8079
+    protocol: TCP
+    name: grpc
+  - port: 8080
+    protocol: TCP
+    name: grpcweb
+  - http: 8081
+    protocol: TCP
+    name: grpc
+  selector:
+    app: crimemap
+  type: LoadBalancer
