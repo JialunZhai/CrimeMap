@@ -32,10 +32,6 @@
 ## run gRPC service only (include gRPC server, gRPC web server and database client)
   bazel run //analytics/online/server/cmd ./analytics/online/config/crimemap.grpc.yaml
 
-# Add new package;
-## For more information, see https://github.com/bazelbuild/rules_nodejs/blob/stable/docs/dependencies.md
-  bazel run @yarn//:yarn -- add $PACKAGE_NAME
-
 # Clear useless modules and add required ones from dependencies
   go mod tidy
 
