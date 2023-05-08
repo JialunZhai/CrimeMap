@@ -32,7 +32,7 @@
   bazel run //analytics/online/server/cmd ./analytics/online/config/crimemap.grpc.yaml
 
 # Build docker image
-  bazel build //analytics/online/server/cmd:image
+  bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //analytics/online/server/cmd:image
 # For developers:
 # Generate BUILD files (no need to do this if you haven't change golang code)
   bazel run //:gazelle
