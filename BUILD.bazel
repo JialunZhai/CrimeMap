@@ -3,6 +3,7 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 package(default_visibility = ["//visibility:public"])
 
 # gazelle:exclude analytics/offline
+# gazelle:exclude analytics/online/app
 # gazelle:exclude bazel-*
 # gazelle:exclude dist
 # gazelle:exclude tmp
