@@ -1,0 +1,12 @@
+prometheus:
+  address: :8090
+database:
+  address: localhost
+  table: group04_rbda_nyu_edu:crimes
+grpc:
+  address: :8079
+grpcweb:
+  address: localhost:8080
+http:
+  address: localhost:8081
+  bundle: ./analytics/online/app/dist/my-map/
