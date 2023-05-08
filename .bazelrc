@@ -1,5 +1,7 @@
 build --cxxopt='-std=c++11'
 run --cxxopt='-std=c++11'
+build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 build --enable_runfiles
 
 # Common Bazel settings for JavaScript/NodeJS workspaces
