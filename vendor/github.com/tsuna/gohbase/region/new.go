@@ -12,41 +12,19 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/tsuna/gohbase/compression"
 	"github.com/tsuna/gohbase/hrpc"
 )
 
-var usedPorts = make([]int, 2)
-
 // NewClient creates a new RegionClient.
 func NewClient(addr string, ctype ClientType, queueSize int, flushInterval time.Duration,
 	effectiveUser string, readTimeout time.Duration, codec compression.Codec) hrpc.RegionClient {
 	// patch begin
-	// split the hostname and port
-	posDelimiter := strings.Index(addr, ":")
-	hostname, portStr := addr[:posDelimiter], addr[posDelimiter+1:]
-	port, _ := strconv.Atoi(portStr)
-	// increase the port to a new port if the port has been used by another client
-	isUsedPort := true
-	for isUsedPort != false {
-		isUsedPort = false
-		for _, usedPort := range usedPorts {
-			if usedPort == port {
-				isUsedPort = true
-				break
-			}
-		}
-		if isUsedPort == false {
-			usedPorts = append(usedPorts, port)
-			break
-		}
-		port++
+	if addr == "nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal:16020" {
+		addr = "nyu-dataproc-w-1.c.hpc-dataproc-19b8.internal:16021"
 	}
-	addr = hostname + ":" + strconv.Itoa(port)
 	// patch end
 
 	c := &client{
