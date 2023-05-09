@@ -9,4 +9,4 @@ grpcweb:
   address: localhost:8080
 http:
   address: localhost:8081
-  bundle: ./analytics/online/app/dist/my-map/
+  bundle: analytics/online/app/dist/my-map/
