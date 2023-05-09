@@ -1,0 +1,5 @@
+prometheus:
+  address: :8090
+http:
+  address: localhost:8081
+  bundle: analytics/online/app/dist/my-map/

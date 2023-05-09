@@ -28,7 +28,12 @@
 # Build and run the whole project with configure file
 ## run all components
   bazel run //analytics/online/server/cmd analytics/online/config/crimemap.dev.yaml
-## run gRPC service only (include Prometheus monitor, gRPC server, gRPC web server and database client)
+## or run two parts separately
+### run HTTP server only (include Prometheus monitor and HTTP server)
+### which will send index.html to web browser 
+  bazel run //analytics/online/server/cmd analytics/online/config/crimemap.http.yaml
+### run gRPC service only (include Prometheus monitor, gRPC server, gRPC web server and database client)
+### which will respond to queries 
   bazel run //analytics/online/server/cmd analytics/online/config/crimemap.grpc.yaml
 
 # Build docker image

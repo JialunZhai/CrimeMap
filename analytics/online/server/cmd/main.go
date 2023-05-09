@@ -51,16 +51,18 @@ func main() {
 			log.Fatalf("PrometheusMonitor.Register failed with error: `%v`\n", err)
 		}
 	}
-	if err := hbase_client.Register(env); err != nil {
-		log.Fatalf("HBaseClient.Register failed with error: `%v`\n", err)
+	if config.Database.Address != "" {
+		if err := hbase_client.Register(env); err != nil {
+			log.Fatalf("HBaseClient.Register failed with error: `%v`\n", err)
+		}
 	}
 	if config.GRPC.Address != "" {
 		if err := grpc_server.Register(env); err != nil {
 			log.Fatalf("GRPCServer.Register failed with error: `%v`\n", err)
 		}
-	}
-	if err := cms.Register(env); err != nil {
-		log.Fatalf("CrimeMapServer.Register failed with error: `%v`\n", err)
+		if err := cms.Register(env); err != nil {
+			log.Fatalf("CrimeMapService.Register failed with error: `%v`\n", err)
+		}
 	}
 	if config.GRPCWeb.Address != "" {
 		if err := grpc_web_server.Register(env); err != nil {
