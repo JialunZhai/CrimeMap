@@ -1,0 +1,17 @@
+To create the partition of the table in Trino:
+create external table crime (longitude double, latitude double, datetime bigint, description string)
+PARTITIONED BY (city STRING)
+row format delimited fields terminated by '\t'
+location '/user/xx2085_nyu_edu/hiveInput';
+
+ALTER TABLE crime ADD PARTITION (city='Chicago') LOCATION '/user/xx2085_nyu_edu/hiveInput/chicago_crime';
+ALTER TABLE crime ADD PARTITION (city='New York') LOCATION '/user/xx2085_nyu_edu/hiveInput/ny_crime';
+ALTER TABLE crime ADD PARTITION (city='Los Angeles') LOCATION '/user/xx2085_nyu_edu/hiveInput/la_crime';
+ALTER TABLE crime ADD PARTITION (city='San Francisco') LOCATION '/user/xx2085_nyu_edu/hiveInput/sf_crime';
+ALTER TABLE crime ADD PARTITION (city='Austin') LOCATION '/user/xx2085_nyu_edu/hiveInput/austin_crime';
+ALTER TABLE crime ADD PARTITION (city='Seattle') LOCATION '/user/xx2085_nyu_edu/hiveInput/seattle_crime'; 
+
+where "/user/xx2085_nyu_edu/hiveInput/chicago_crime" consist of the cleaned Chicago crime data, "/user/xx2085_nyu_edu/hiveInput/ny_crime" with the cleaned New York data, and so on.
+
+Tableau, create a measure of average crime per year: 
+COUNT([crime])/(MAX(YEAR([Datetime]))-MIN(YEAR([Datetime])))
